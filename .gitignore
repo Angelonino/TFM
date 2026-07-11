@@ -1,0 +1,67 @@
+# =========================================================================
+# GITIGNORE PARA PROYECTOS DE LATEX EN VISUAL STUDIO CODE (TFM)
+# =========================================================================
+
+# --- Archivos auxiliares del núcleo de LaTeX ---
+*.aux
+*.log
+*.toc
+*.lof
+*.lot
+*.out
+*.bbl
+*.blg
+*.brf
+*.ilg
+*.ind
+*.idx
+*.glo
+*.gls
+*.glg
+
+# --- Archivos generados por paquetes específicos ---
+# biblatex
+*.bcf
+*.run.xml
+
+# hyperref
+*.out
+
+# listings / minted (código fuente)
+*.pyg
+
+# glossaries
+*.ist
+*.acn
+*.acr
+*.alg
+
+# todonotes
+*.tdo
+
+# --- Archivos específicos de herramientas de automatización ---
+# latexmk
+*.fdb_latexmk
+*.fls
+*.synctex
+*.synctex(busy)
+*.synctex.gz
+*.synctex.gz(busy)
+
+# --- Archivos de respaldo y temporales del sistema/editores ---
+*~
+*.bak
+*.sav
+*.backup
+Thumbs.db
+.DS_Store
+
+# --- Configuración local de Visual Studio Code ---
+.vscode/
+.history/
+*.code-workspace
+
+# --- Archivo final de salida (PDF) ---
+# Descomenta la siguiente línea si NO quieres subir el PDF compilado al repositorio.
+# En desarrollo colaborativo o control estricto se prefiere no trackearlo.
+# main.pdf
