@@ -2,9 +2,11 @@
 \label{ch:state_of_the_art}
 
 \section{Centros de transformación en redes inteligentes}
+\label{sec:centros_transformacion}
 En el ecosistema de la Infraestructura de Medición Avanzada (AMI), los centros de transformación de media a baja tensión (MT/BT) representan el nodo neurálgico para la centralización del tráfico de datos. A diferencia de los modelos de distribución dispersos, el modelo masivo europeo y asiático agrupa densidades críticas de abonados (típicamente entre 10 y 100 medidores) bajo el área de cobertura de una única estación transformadora secundaria, justificando técnica y económicamente el despliegue de Unidades Concentradoras de Datos (DCU) fijas \cite{6925952}. El concentrador de datos opera como una pasarela híbrida o \textit{gateway}, gestionando el tráfico descendente hacia los contadores inteligentes a través del propio cableado eléctrico como canal físico mediante tecnologías de comunicación por línea eléctrica de banda estrecha (NB-PLC), y derivando el tráfico ascendente hacia los sistemas centrales de gestión de la distribuidora mediante redes celulares o de fibra óptica \cite{SHARMA2017704, 10843716}. No obstante, la subestación secundaria constituye un entorno hostil para la propagación de alta frecuencia debido a las variaciones dinámicas de la impedancia de acceso, los fenómenos de desadaptación de líneas y la inyección continua de interferencias electromagnéticas \cite{9115397, 9881962}.
 
 \subsection{Esquema de equipos y estrategias de acoplamiento físico}
+\label{subsec:acoplamiento_PLC}
 La inyección de señales NB-PLC en las barras de baja tensión del transformador exige el diseño de Analog Front-Ends (AFE) e interfaces de acoplamiento capacitivo o inductivo capaces de aislar los circuitos digitales de control frente a las tensiones nominales y transitorios de la red (Categoría de Sobretensión IV). Con el fin de superar la atenuación severa del canal eléctrico, las estrategias de inyección física en el centro de transformación se segmentan en arquitecturas monofásicas y trifásicas, teniendo un impacto directo sobre la simetría del canal y el acoplamiento cruzado entre fases (\textit{cross-phase coupling}):
 \begin{itemize}
     \item \textbf{Inyección Monofásica:} Presenta ventajas en coste y simplicidad de hardware, pero depende intrínsecamente del acoplamiento natural e indirecto que ocurre en los devanados del transformador y las capacitancias parásitas de las líneas. Bajo escenarios de cargas trifásicas desequilibradas o alta atenuación inductiva, esta estrategia provoca asimetrías severas en la relación señal-ruido (SNR) de las fases no inyectadas.
@@ -14,6 +16,7 @@ La inyección de señales NB-PLC en las barras de baja tensión del transformado
 El límite operativo crítico en este esquema de hardware no reside en la atenuación resistiva de las líneas conductores, sino en la coexistencia con el ruido conductivo generado por la electrónica de potencia. Mediciones de campo demuestran que las emisiones de alta frecuencia procedentes de fuentes conmutadas (SMPS), inversores fotovoltaicos y convertidores de carga de vehículos eléctricos actúan de forma síncrona en la banda CENELEC-A \cite{10104173}. Este ruido electromagnético satura los amplificadores de bajo ruido (LNA) del receptor del concentrador, degradando la capacidad de corrección de errores de la capa física (PHY) y aislando la cabecera. Esto obliga al desarrollo de procesadores embebidos potentes en el concentrador capaces de soportar esquemas de codificación avanzados y algoritmos de corrección de errores más robustos que los convolucionales estándar, tales como la codificación basada en códigos Turbo o LDPC \cite{9441595,9820886}.
 
 \subsection{Red PRIME y la topología dinámica del Nodo Base}
+\label{subsec:estructura_PRIME}
 El protocolo \textit{PoweRline Intelligent Metering Evolution} (PRIME) organiza la subred del centro de transformación mediante una topología en árbol lógica de carácter dinámico (figura \ref{fig:prime_topology}) y \textit{plug-and-play}. Esta arquitectura es gobernada de manera centralizada por el \textbf{Nodo Base} (Base Node), el cual se encuentra embebido en el núcleo de procesamiento del concentrador de datos, mientras que los contadores inteligentes de los usuarios finales actúan inicialmente como \textbf{Nodos de Servicio} (Service Nodes).
 
 \begin{figure}[ht]
@@ -30,3 +33,51 @@ Las simulaciones de topología de red NB-PLC demuestran que la estructura ramifi
 \end{enumerate}
 
 Asimismo, ante redes complejas y de gran escala donde se manejan masivamente datos multidimensionales de facturación, calidad de suministro y fasores síncronos, las DCU de nueva generación deben integrar en su software módulos avanzados de agregación de datos con preservación de ciberseguridad/privacidad homomórfica y técnicas de poda de datos (\textit{data pruning}) para reducir el impacto del tráfico redundante hacia la cabecera sin alterar la estimación de estado de la red inteligente \cite{9313012, 10268020}. Esta complejidad justifica la transición hacia arquitecturas embebidas multifrecuencia y bandas extendidas capaces de operar de forma flexible más allá de los límites tradicionales de la última milla europea \cite{7007657}.
+
+\section{Equipos comerciales y sus limitaciones}
+\label{sec:equipos_comerciales}
+
+El despliegue masivo de las redes eléctricas inteligentes (Smart Grids) ha impulsado la comercialización de diversos equipos de comunicaciones y metrología. Sin embargo, las soluciones industriales y comerciales disponibles actualmente en el mercado de la distribución eléctrica de baja tensión presentan limitaciones de diseño severas. Estas limitaciones no solo incrementan los costes de despliegue, sino que comprometen la escalabilidad y la eficiencia de los centros de transformación inteligentes. A continuación, se detallan los desafíos tecnológicos subyacentes a la modularidad del hardware, las restricciones operativas de sus fuentes de alimentación y los retos de compatibilidad asociados a las nuevas topologías de potencia.
+
+\subsection{Alto coste por modularidad y baja densidad}
+\label{subsec:modularidad_baja_densidad}
+
+Tradicionalmente, los concentradores de datos comerciales (Data Concentrator Units, DCU) y los nodos base de las redes PRIME o G3-PLC se han desarrollado bajo arquitecturas marcadamente modulares \cite{Pirak2015Recent}. En estos dispositivos, es habitual encontrar placas de circuito impreso (PCB) físicamente independientes destinadas a tareas específicas: una tarjeta de procesamiento central (CPU) basada en Linux embebido, tarjetas módems PLC independientes (en muchas ocasiones duplicadas o triplicadas para dar cobertura a escenarios multifásicos mediante acoplamientos físicos independientes) y módulos analógicos de adquisición para metrología.
+
+Esta aproximación modular presenta inconvenientes críticos que lastran la viabilidad técnica y económica del equipo:
+\begin{itemize}
+    \item \textbf{Elevado coste de fabricación (BOM):} La descentralización de funciones exige el uso de múltiples planos de masa, una gran cantidad de conectores placa a placa expuestos a vibraciones y carcasas robustas de gran volumen, lo que eleva significativamente el coste total de la lista de materiales.
+    \item \textbf{Baja densidad de integración física:} La dispersión de circuitería integrada impide compactar el equipo. Esto choca frontalmente con la evolución tecnológica actual orientada a System-on-Chip (SoC) altamente integrados y programables para comunicaciones de banda estrecha y banda ancha (como las plataformas STarGRID, Semitech o EnVerv EV8000) \cite{Sharma2017Power}.
+    \item \textbf{Ausencia de metrología unificada de alta densidad:} A diferencia de los contadores residenciales modernos que consiguen integrar lógica de aplicación, módem PLC y metrología en un solo circuito integrado de alta densidad (tales como el chip ASM221 o el STCOMET de STMicroelectronics) \cite{Sharma2017Power}, los concentradores de datos de subestación siguen dependiendo de etapas externas para registrar la metrología trifásica de clase 0.2 o 0.5. 
+\end{itemize}
+
+Esta problemática se evidencia incluso en plataformas experimentales de vanguardia, como el sistema PLC-MCS desarrollado conjuntamente por Iberdrola, Microchip y la Universidad de Zaragoza \cite{PLC_MCS_Design}. A pesar de sus excelentes prestaciones para caracterizar canales multifásicos en tiempo real, el sistema sigue descansando sobre una arquitectura distribuida (Raspberry Pi 4B, tres placas de evaluación PL360 y módulos ATSAM4CMS32-DB) \cite{PLC_MCS_Design}, lo que ratifica que la consolidación de un hardware industrial unificado, de alta densidad y bajo coste es una de las asignaturas pendientes en la nueva generación de concentradores de datos.
+
+\subsection{Fuente de alimentación: Requisitos de ciclo de vida (15 años) y limitaciones físicas}
+\label{subsec:fuente_alimentacion_15anos}
+
+La fuente de alimentación (Power Supply Unit, PSU) es el subsistema más crítico y vulnerable de cualquier equipo de campo instalado en centros de transformación. El entorno electromagnético y ambiental de un centro de distribución de baja tensión es extremadamente hostil, caracterizándose por fluctuaciones térmicas estacionales, transitorios de tensión recurrentes y sobretensiones temporales de gran energía. Por esta razón, las compañías distribuidoras de energía (utilities) imponen especificaciones de diseño sumamente rigurosas para el hardware:
+\begin{itemize}
+    \item \textbf{Ciclo de vida operativo sin mantenimiento:} Se exige un ciclo mínimo de 15 años de funcionamiento continuo ininterrumpido (24/7).
+    \item \textbf{Ausencia de refrigeración activa:} El equipo debe disipar el calor de forma pasiva por convección natural dentro de armarios estancos.
+\end{itemize}
+
+En las fuentes de alimentación conmutadas (SMPS) tradicionales de baja frecuencia o lineales, el principal factor limitador de la vida útil son los condensadores electrolíticos de aluminio utilizados en las etapas de filtrado. El electrolito líquido de estos componentes tiende a evaporarse gradualmente a lo largo de los años, un fenómeno físico que se acelera de forma exponencial con el incremento de la temperatura interna de operación (según la ley de Arrhenius). 
+
+Para poder garantizar sobre el papel la exigente vida útil de 15 años, los fabricantes de equipos comerciales se ven obligados a sobredimensionar térmicamente las fuentes, a implementar condensadores electrolíticos especiales de grado industrial/militar extremadamente costosos, o bien a recurrir a costosas baterías de condensadores de película plástica o cerámicos multicapa (MLCC), los cuales poseen menor densidad capacitiva por unidad de volumen. El resultado directo de estas limitaciones de diseño son fuentes de alimentación costosas, sobredimensionadas en peso y volumen, e ineficientes desde el punto de vista del aprovechamiento del espacio en carril DIN.
+
+\subsection{Topologías de alta frecuencia y alta tensión}
+\label{subsec:topologias_alta_frecuencia_tension}
+
+Para superar las limitaciones físicas y económicas de las PSUs comerciales de 15 años de ciclo de vida, la ingeniería de hardware actual se orienta hacia la adopción de topologías conmutadas de alta tensión y alta frecuencia (High-Voltage High-Frequency, HVHF). 
+ 
+Fundamentado en las leyes del electromagnetismo, aumentar drásticamente la frecuencia de conmutación de la fuente (desde las decenas de kilohertzios habituales hasta el rango de cientos de kilohertzios o incluso megahercios) permite reducir proporcionalmente el volumen y el peso de los componentes magnéticos inductivos (transformadores de aislamiento, choques) y de los condensadores de filtrado. Esta reducción volumétrica abre las puertas a diseños ultracompactos y de alta densidad de potencia, facilitando la integración de la PSU en la propia placa base del concentrador de datos.
+
+Sin embargo, el incremento de la frecuencia de conmutación y el manejo de altos voltajes de entrada introducen un grave problema de compatibilidad electromagnética (CEM): la inyección de ruido conductivo e inducido en modo común y modo diferencial sobre la red eléctrica. Las transiciones rápidas de tensión ($dv/dt$) y corriente ($di/dt$) generadas por los transistores de potencia al conmutar a alta frecuencia producen armónicos de gran energía que caen de lleno en las bandas espectrales reservadas para las comunicaciones por línea eléctrica de banda estrecha (NB-PLC), concretamente en las bandas CENELEC A (9--95 kHz) y FCC (95--500 kHz) \cite{Sharma2017Power}. 
+
+Este solapamiento espectral degrada severamente la relación señal-ruido ($SNR$) en los receptores del concentrador, provocando atenuaciones, pérdida de paquetes y caídas drásticas en el throughput de la red PRIME o G3-PLC. Por consiguiente, el diseño de un concentrador de datos de nueva generación exige una rigurosa fase de coexistencia analítica, donde las ventajas de reducción de tamaño obtenidas mediante topologías HVHF deben balancearse mediante:
+\begin{enumerate}
+    \item El diseño óptimo de etapas de filtrado EMI compuestas por inductores de choque de modo común ($L_{CM}$) y condensadores de modo común ($C_{CM}$).
+    \item La implementación de técnicas de conmutación suave (Soft-Switching) —como convertidores de resonancia LLC o Active Clamp Flyback— que mitiguen las pendientes de conmutación y el ruido electromagnético en su origen.
+    \item El correcto aislamiento galvánico y desacoplo físico entre las fases utilizadas para medir metrología, la fase de inyección de señal PLC y la fase empleada para alimentar el propio equipo.
+\end{enumerate}
