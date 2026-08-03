@@ -26,10 +26,11 @@ Para evitar bucles de masa, proteger los circuitos integrados de procesamiento d
 Cada puerto físico que conecta con el exterior del chasis incorpora circuitos dedicados de protección frente a transitorios electromagnéticos:
 \begin{itemize}
     \item \textbf{Puerto RS-485:} implementa un driver para conversión de comunicación serial (\textit{``Universal Asynchronous Receiver Transmiter'', UART}) a comunicación diferencial \textit{Half-Duplex} RS-485, comunicándose con el módulo de procesamiento central mediante un aislador digital multipuerto.
-    
-    \item \textbf{Puertos Ethernet (10/100 Mbps):} se integran dos puertos ethernet independientes, aislados galvánicamente para cumplir con estándares de seguridad eléctrica, proporcionando uno de ellos un aislamiento galvánico de $8\text{ kV}_{\text{peak}}$ conforme a la norma EN 62368-1, y el otro puerto, un aislamiento de $10\text{ kV}_{\text{RMS}}/20\text{ kV}_{\text{peak}}$, según la norma EN 60255-27.
-    
-    \item \textbf{Entradas y Salidas Digitales (GPIOs de Campo):} Las entradas digitales de monitoreo (p. ej., detección de apertura de puerta del centro de transformación o alarmas de fusibles) y las salidas de relé están optocopladas mediante fototransistores de alta velocidad, aislando los transitorios de la planta del bus interno de la MPU.
+        
+    \item \textbf{Puertos Ethernet (10/100 Mbps):} se integran dos puertos ethernet independientes, aislados galvánicamente para cumplir con estándares de seguridad eléctrica, proporcionando uno de ellos un aislamiento galvánico de $6\text{ kV}_{\text{RMS}}$ conforme a la norma EN 62368-1, y el otro puerto, un aislamiento de $10\text{ kV}_{\text{RMS}}/20\text{ kV}_{\text{peak}}$, según la norma EN 60255-27.
+        
+    \item \textbf{Entradas y Salidas Digitales (GPIOs de Campo):} Las salidas digitales para monitoreo (p. ej., detección de apertura de puerta del centro de transformación o alarmas de fusibles) se implementan mediante drivers digitales aislados, con capacidad de aislamiento galvánico de hasta $10 \text{ kV}$ durante 1 minuto, y con rango de funcionamiento hasta $60 \text{ V}$. Por otra parte, las salidas digitales se implementan mediante relés convencionales DPDT (\textit{Double Pole Double Throw}) de baja señal, con un contacto Normalmente Abierto (NA) y un contacto Normalmente Cerrado (NC), con aislamiento galvánico simple de $2 \text{ kV}_\text{rms}$. Con esta configuración, el concentrador de datos puede interactuar con sistemas de control y supervisión externos, garantizando la seguridad del equipo y la integridad de las señales de control. 
+
 \end{itemize}
 
 \section{Subsistema de Procesamiento Central y Comunicaciones de Red}
@@ -40,20 +41,85 @@ El núcleo de procesamiento del concentrador de datos requiere gestionar simult�
 \subsection{Unidad MPU y Controlador de Red (Linux Embebido)}
 \label{subsec:mpu_linux}
 
-Para responder a estos requerimientos se adopta una arquitectura basada en un System-on-Module (SoM) de alta eficiencia con microprocesador (MPU) de 32/64 bits ejecutando un sistema operativo Linux embebido industrial. 
+Para responder a estos requerimientos se adopta una arquitectura basada en un System-on-Module (SoM) de alta eficiencia con microprocesador (MPU) de 32/64 bits ejecutando un sistema operativo Linux embebido industrial. Para esto se ha escogido en concreto la plataforma OPOS93 de Armadeus Systems, basada en el procesador NXP i.MX 93, que integra un núcleo Cortex-A55 de alto rendimiento y un coprocesador Cortex-M33 para tareas de tiempo real. Además cuenta con hasta 4 GB de memoria RAM LPDDR4 y hasta 64 GB de almacenamiento eMMC, y también con múltiples interfaces de comunicación, incluyendo Ethernet, USB, UART, SPI e I2C. Esta elección permite un procesamiento eficiente de las tareas de red y metrología, así como la ejecución de algoritmos de ciberseguridad y gestión remota del dispositivo.
 
-Esta elección frente a microcontroladores de bajas prestaciones se justifica analíticamente por la latencia de procesamiento intrínseca de los modems NB-PLC basados en OFDM \cite{Bumiller2015Powerline}. Tal como demuestra Bumiller, las etapas de transformada rápida de Fourier (IFFT/FFT) y los algoritmos FEC (codificación convolucional concatenada con Reed-Solomon) introducen un retardo de cómputo de 3 a 5 símbolos OFDM por paquete. En estándares como IEEE 1901.2, este tiempo muerto o \textit{Response Interframe Spacing} (RIFS) alcanza hasta $695\,\mu\text{s}$ (equivalente a 10 símbolos OFDM en CENELEC-A) \cite{Bumiller2015Powerline}.
+Esta elección frente a microcontroladores de bajas prestaciones se justifica analíticamente por la latencia de procesamiento intrínseca de los modems NB-PLC basados en OFDM \cite{7147624}. Tal como demuestra Bumiller, las etapas de transformada rápida de Fourier (IFFT/FFT) y los algoritmos FEC (codificación convolucional concatenada con Reed-Solomon) introducen un retardo de cómputo de 3 a 5 símbolos OFDM por paquete. En estándares como IEEE 1901.2, este tiempo muerto o \textit{Response Interframe Spacing} (RIFS) alcanza hasta $695\,\mu\text{s}$ (equivalente a 10 símbolos OFDM en CENELEC-A) \cite{7147624}.
 
-Para evitar el colapso por desbordamiento de memoria (\textit{buffer overflow}) en redes multisalto de alta densidad, la arquitectura de software del concentrador implementa un controlador a nivel de Kernel denominado \texttt{NetDevice} \cite{Bumiller2015Powerline}. Este driver abstrae la capa física mediante un protocolo de empaquetado a flujo (\textit{Packet-to-Stream Protocol}, P2SP) que multiplexa el tráfico de control, metrología y datos IP en flujos continuos, maximizando la eficiencia de los buffers de la MPU \cite{Bumiller2015Powerline}.
+% Este siguiente párrafo se ve bastante interesante, pero como ya es algo del software, tendría primero que verificar si es realmente lo que se implementa en el concentrador de datos. Si es así, podría ser un buen punto para enlazar con el capítulo de software y explicar cómo se gestiona la pila de protocolos y la comunicación entre el SoM y el modem PLC.
 
-\subsection{Interfaces de Campo: Ethernet, RS-485 y E/S Digitales}
-\label{subsec:interfaces_campo}
+% Para evitar el colapso por desbordamiento de memoria (\textit{buffer overflow}) en redes multisalto de alta densidad, la arquitectura de software del concentrador implementa un controlador a nivel de Kernel denominado \texttt{NetDevice} \cite{7147624}. Este driver abstrae la capa física mediante un protocolo de empaquetado a flujo (\textit{Packet-to-Stream Protocol}, P2SP) que multiplexa el tráfico de control, metrología y datos IP en flujos continuos, maximizando la eficiencia de los buffers de la MPU \cite{7147624}.
 
-El procesador se comunica con el entorno del centro de transformación a través de interfaces aisladas:
+%OJO: esta subsección no sé si realmente sería necesaria, ya que anteriormente se explican las mismas interfaces de campo y sus protecciones. Podría ser redundante, pero si se quiere enfatizar la importancia de las interfaces de campo y su aislamiento galvánico, podría mantenerse.
+% \subsection{Interfaces de Campo: Ethernet, RS-485 y E/S Digitales}
+% \label{subsec:interfaces_campo}
+
+% El procesador se comunica con el entorno del centro de transformación a través de interfaces aisladas:
+% \begin{itemize}
+%     \item \textbf{Doble Puerto Ethernet (10/100 Mbps):} Basado en controladores MAC integrados en la MPU y transceptores PHY externos comunicados vía MII/RMII. El aislamiento magnético de $10\text{ kV}_{\text{RMS}}$ y de $6\text{ kV}_{\text{RMS}}$ previene interferencias galvánicas procedentes de switches de subestación.
+%     \item \textbf{Bus Industrial RS-485 Aislado:} Destinado a la conexión local de medidores modbus o unidades de supervisión de centro de transformación (TRM). Implementa transceptores con barrera galvánica integrada ($2.5\text{ kV}_{\text{RMS}}$) y terminación de línea conmutable mediante jumpers de hardware.
+%     \item \textbf{Entradas/Salidas Digitales Optocopladas:} Dos entradas digitales de detección ($0\text{--}24\text{ VDC}$) con aislamiento por optocoplador para monitorear alarmas físicas (p. ej., apertura de puerta del centro o disparo de fusibles) y dos salidas de relé de estado sólido (\textit{SSR}) para maniobra remota.
+% \end{itemize}
+
+\section{Subsistema de Procesamiento Central e Interconexión de Dominios}
+\label{sec:procesamiento_central}
+
+El diseño del concentrador de datos exige gestionar de forma concurrente tareas de naturaleza heterogénea: desde el cómputo intensivo no determinista (pila de red IP/IPv6, ciberseguridad TLS/IPsec, gestión remota y base de datos local) hasta procesos críticos de tiempo real estricto (metrología trifásica, ejecución de la capa MAC/PHY de PRIME, temporización RTC y seguridad física) \cite{7147624, 7778783}. 
+
+Para resolver este compromiso sin saturar el sistema operativo ni comprometer la determinicidad del canal eléctrico, la arquitectura adopta un \textbf{esquema de procesamiento asíncrono multinivel (Dual-Core Architecture)} que separa físicamente el plano de aplicación del plano de tiempo real y metrología.
+
+\subsection{Unidad MPU Principal: Plataforma Linux Embebido (Armadeus OPOS93 / NXP i.MX 93)}
+\label{subsec:mpu_linux}
+
+El nivel superior de procesamiento es gobernado por el System-on-Module (SoM) \textbf{Armadeus OPOS93}, basado en el procesador de aplicaciones \textbf{NXP i.MX 93}. Esta MPU integra una arquitectura heterogénea formada por un núcleo de alto rendimiento ARM Cortex-A55 (arquitectura de 64 bits), un coprocesador en tiempo real Cortex-M33 y un motor de aceleración neuronal (NPU Ethos-U65). La plataforma se complementa con hasta $4\text{ GB}$ de memoria RAM LPDDR4, $64\text{ GB}$ de almacenamiento eMMC y un conjunto extenso de periféricos (Ethernet MAC dual, USB 2.0 OTG, UART, SPI e $I^2C$).
+
+La elección de una MPU de estas prestaciones frente a microcontroladores monolíticos de bajo coste se fundamenta en la alta latencia de procesamiento intrínseca de los módems NB-PLC multiportadora (OFDM) \cite{7147624}. Tal como analiza Bumiller, las etapas de transformada rápida de Fourier (IFFT/FFT) y la decodificación de algoritmos FEC (códigos convolucionales concatenados con Reed-Solomon) introducen un retardo de cómputo de 3 a 5 símbolos OFDM por paquete \cite{7147624}. En estándares de comunicación como IEEE 1901.2, este tiempo muerto o \textit{Response Interframe Spacing} (RIFS) alcanza hasta $695\,\mu\text{s}$ (equivalente a 10 símbolos OFDM en CENELEC-A) \cite{7147624}.
+
+Al delegar las tareas de aplicación y transporte en Linux embebido, el i.MX 93 ejecuta controladores a nivel de Kernel (\texttt{NetDevice}) que gestionan buffers en cascada para soportar altas tasas de error de paquete ($\text{PER} > 20\%$) sin perder tramas de telegestión DLMS/COSEM procedentes de la subred \cite{7147624, 7778783}. Asimismo, el procesador gestiona el arranque seguro (\textit{Secure Boot} / High Assurance Boot) e interactúa con los módulos opcionales LTE y RF híbrido (IEEE Std 1901.3-2025).
+
+\subsection{Microcontrolador Coprocesador Dedicado: Microchip PIC32CXMTC}
+\label{subsec:coprocesador_pic32}
+
+Para descargar a la MPU Host de las interrupciones críticas en tiempo real y optimizar la lista de materiales (BOM), el plano inferior es asumido por el microcontrolador especializado \textbf{Microchip PIC32CXMTC}. Este SoC de 32 bits integra hardware de metrología, unidades criptográficas y soporte nativo para la pila de protocolos PRIME 1.4 a través del entorno \textbf{Microchip Harmony v3}.
+
+Las funciones principales asignadas al PIC32CXMTC se estructuran en cinco ejes operativos:
+
+\begin{enumerate}
+    \item \textbf{Control del Módem PLC (Microchip PL460):} El PIC32CXMTC ejecuta la capa MAC de PRIME y gobierna directamente al módem analógico PL460 a través de un bus SPI dedicado y líneas de interrupción por cambio de estado.
+    
+    \item \textbf{Gestión de Acoplamiento Trifásico y Paso por Cero (Zero-Crossing):} Controla de forma activa la red de acoplamiento pasivo de la señal PLC sobre las tres fases ($L1, L2, L3$) mediante opto-relés de estado sólido, garantizando el aislamiento galvánico de las fases inactivas y procesando los impulsos de paso por cero generados en el secundario del transformador para la sincronización de tramas \cite{5764420}.
+
+    \item \textbf{Motor de Metrología de Supervisión:} Procesa las señales procedentes del AFE analógico (divisores resistivos de tensión y transformadores de corriente CT), ofreciendo precisión de Clase B en energía activa (EN 50470-3) y Clase 2 en energía reactiva (EN 62053-23), además de registrar magnitudes instantáneas ($V, I, P, Q, \text{PF}$) y eventos de calidad de onda (huecos y sobretensiones).
+
+    \item \textbf{Gestión Energética, RTC de Ultra Bajo Consumo y Anti-Tamper:} 
+    En caso de fallo en la red eléctrica, el equipo cuenta con dos sistemas de respaldo, Respaldo a Corto Plazo y Respaldo a Largo Plazo, que se gestionarán de manera automática para cumplir con el horizonte temporal: %el dominio $V_{BAT}$ del PIC32CXMTC permanece energizado a través de pila 3V convencional CR2032 en el equipo. Con un consumo de corriente en modo retención inferior a $1\,\mu\text{A}$, el RTC integrado mantiene la sincronización horaria durante 3 años sin necesidad de reemplazar la batería durante los 15 años de vida útil del equipo. Asimismo, el controlador de intrusión supervisa los pines de detección de apertura de carcasa (mediante micro-switches mecánicos y sensores ópticos LDR), estampando la fecha/hora del evento y eliminando las claves criptográficas de los registros de respaldo de seguridad (\texttt{GPBR Clear}).
+
+    \begin{itemize}
+        \item \textbf{\textit{Respaldo a Corto Plazo (Last Gasp):}} Un banco de supercondensadores suministra energía durante los primeros segundos tras el fallo de red, permitiendo a la MPU Host (i.MX 93) realizar un apagado ordenado (\textit{graceful shutdown}) del SO Linux, volcar buffers a la eMMC y transmitir la alerta de ``último suspiro" vía PLC o LTE. Durante este periodo, el sistema es capaz de operar en máxima potencia, con el fin de poder utilizar plenamenta todas las funciones de comunicación y metrología, incluyendo la transmisión de datos críticos a la nube o al sistema central de gestión (HES).
+        \item \textbf{\textit{Respaldo a Largo Plazo (RTC y Seguridad Física):}} Para cumplir con las especificaciones del proyecto, el RTC y el circuito de detección de intrusión (\textit{Anti-Tamper}) integrados en el PIC32CXMTC son alimentados a través del dominio $V_{BAT}$ por una batería primaria de litio de 3V de ultra baja autodescarga en formato CR2032. Gracias a un consumo en modo de retención de ultra bajo consumo ($< 1\,\mu\text{A}$), este esquema garantiza el mantenimiento de la hora exacta y la supervisión de apertura de carcasa durante 3 años acumulados de ausencia de tensión de red, garantizando un ciclo de vida operativo de 15 años libre de mantenimiento y sin necesidad de sustitución de baterías.  Asimismo, el controlador de intrusión supervisa los pines de detección de apertura de carcasa (mediante micro-switches mecánicos y sensores ópticos LDR), estampando la fecha/hora del evento y eliminando las claves criptográficas de los registros de respaldo de seguridad (\texttt{GPBR Clear}).
+    \end{itemize}
+
+    \item \textbf{Watchdog de Supervisión y Control de Ciclo de Potencia (Power-Cycle):}
+    A diferencia de un reset lógico convencional, el PIC32CXMTC supervisa de forma continua la salud de la MPU Host. Ante un bloqueo del sistema operativo Linux o fallo del watchdog principal, el microcontrolador conmuta la entrada de habilitación (\texttt{EN}) del Load-Switch que alimenta la línea $V_{DD\_CPU}$ del i.MX 93, forzando un reinicio por corte físico de alimentación de 1 a 2 segundos para recuperar el equipo desde un estado seguro conocido.
+\end{enumerate}
+
+\subsection{Interconexión y Buses de Comunicación Inter-Dominio}
+\label{subsec:interconexion_buses}
+
+La comunicación entre el plano de aplicación (MPU Host i.MX 93) y el plano de tiempo real y metrología (coprocesador PIC32CXMTC) se articula a través de un conjunto de líneas digitales optimizadas para garantizar una transferencia de datos determinista y prevenir interferencias galvánicas:
+
 \begin{itemize}
-    \item \textbf{Doble Puerto Ethernet (10/100 Mbps):} Basado en controladores MAC integrados en la MPU y transceptores PHY externos comunicados vía MII/RMII. El aislamiento magnético de $1.5\text{ kV}_{\text{RMS}}$ previene interferencias galvánicas procedentes de switches de subestación.
-    \item \textbf{Bus Industrial RS-485 Aislado:} Destinado a la conexión local de medidores modbus o unidades de supervisión de centro de transformación (TRM). Implementa transceptores con barrera galvánica integrada ($2.5\text{ kV}_{\text{RMS}}$) y terminación de línea conmutable mediante jumpers de hardware.
-    \item \textbf{Entradas/Salidas Digitales Optocopladas:} Dos entradas digitales de detección ($0\text{--}24\text{ VDC}$) con aislamiento por optocoplador para monitorear alarmas físicas (p. ej., apertura de puerta del centro o disparo de fusibles) y dos salidas de relé de estado sólido (\textit{SSR}) para maniobra remota.
+    \item \textbf{Bus Principal SPI (Master/Slave):} Constituye el canal síncrono principal de comunicación inter-procesador. La MPU Host actúa como controlador SPI (\textit{Master}) y el PIC32CXMTC como periférico (\textit{Slave}). A través de este bus de alta velocidad se transporta todo el flujo binario de tramas de telegestión DLMS/COSEM, intercambio de mensajes de la capa MAC de PRIME, perfiles de carga acumulados y registros periódicos de metrología.
+
+    %Revisar si en realidad está este GPIO conectado, no lo recuerdo ahora si había una línea de interrupción dedicada como MCU_int_to_SOM o algo parecido. Si no, habría que eliminar este item.
+    \item \textbf{Línea de Interrupción por GPIO:} Señal digital orientada desde el PIC32CXMTC hacia la MPU Host. Actúa como interrupción hardware (\textit{IRQ}) para notificar la recepción de tramas PLC, eventos de metrología o alarmas físicas sin necesidad de recurrir a esquemas de sondeado (\textit{polling}), reduciendo la carga de procesamiento del sistema operativo Linux.
+
+    \item \textbf{Interfaz SWD (Serial Wire Debug):} La programación inicial del firmware en línea de producción y la depuración en circuito del núcleo ARM Cortex-M4F del PIC32CXMTC se realizan mediante el estándar industrial \textit{\textbf{SWD}} (líneas \texttt{SWDIO} y \texttt{SWCLK}), descartando esquemas antiguos como ICSP y facilitando el acceso a través de los cabezales internos de la PCB, habilitando así también la posibilidad de realizar la programación del firmware directamente desde el SOM mediante software genérico o abierto de programación como (\textit{OpenOCD}).
+
+    \item \textbf{Líneas UART de Depuración (Debug Console):} Las líneas serie UART ($3.3\text{ V}$ TTL) se derivan a puntos de prueba (\textit{test points}) y conectores internos de la placa. Su función se limita a la depuración de firmware en desarrollo y a la monitorización de logs de diagnóstico de bajo nivel.
+
+    \item \textbf{Señales de Control Físico (\texttt{NRST} y \texttt{ERASE}):} La MPU Host controla directamente la línea de reinicio (\texttt{NRST}) del PIC32CXMTC para forzar un reseteo del módem/stack PLC en caso de fallo, mientras que se habilita un pad interno para la aserción manual de la señal de borrado (\texttt{ERASE}).
+
+    \item \textbf{Buffers de Aislamiento y Anti-Backfeeding:} Se intercalan integrados de acoplamiento de señal y buffers lógicos en el bus digital inter-procesador para evitar la realimentación eléctrica inversa (\textit{backfeeding}) a través de los diodos de protección ESD de los pines de E/S cuando la MPU Host o el coprocesador entran en modo de apagado o durante la fase de "último suspiro" (\textit{last gasp}).
 \end{itemize}
 
 \section{Subsistema de Frente Analógico (AFE), PLC Trifásico y Comunicaciones Inalámbricas}
@@ -64,25 +130,97 @@ El subsistema de comunicaciones PLC constituye el elemento diferencial del conce
 \subsection{Frente Analógico (AFE) y Driver de Inyección Trifásico}
 \label{subsec:afe_driver}
 
-El módulo analógico (AFE) se articula en torno a un módem módem transceptor integrado (p. ej., Microchip PL360 o Renesas CPX) gobernado por un DSP dedicado para la capa física PHY. Para inyectar la señal en las tres fases ($R, S, T$) sin sufrir los efectos severos de la desadaptación de impedancias descritos por Hallak y Bumiller \cite{Hallak2013Coexistence}, el hardware incorpora una etapa de amplificación lineal de alta corriente y acoplamiento trifásico direccionable.
+El módulo analógico (AFE) se articula en torno a un módem transceptor integrado, utilizando para ello el desarrollado por la empresa de semiconductores \textbf{\textit{Microchip}}, el PL460, gobernado por un DSP dedicado para la capa física PHY. Para inyectar la señal en las tres fases ($R, S, T$) sin sufrir los efectos severos de la desadaptación de impedancias descritos por Hallak y Bumiller \cite{6525864}, el hardware incorpora una etapa de amplificación lineal de alta corriente y acoplamiento trifásico direccionable, compuesto de 3 transformadores de señal, con aislamiento galvánico de $5\text{ kV}_{\text{RMS}}$, y 3 optoacopladores bidireccionales, con baja impedancia de conducción, para seleccionar la fase de inyección y de recepción.
 
-En transmisiones OFDM multiportadora, la impedancia del circuito emisor en estado de transmisión ($TX$) debe ser extremadamente baja ($Z_1 \approx 0\,\Omega$) para garantizar la máxima transferencia de tensión hacia la red ($V_{TX}$) \cite{Hallak2013Coexistence}. Sin embargo, cuando operan múltiples transmisores no interoperables en la misma línea, esta baja impedancia en TX provoca la absorción y atenuación de la señal útil en fases adyacentes \cite{Hallak2013Coexistence}. Aunque la norma CENELEC EN 50065-7 fija restricciones de impedancia mínima en recepción/transmisión ($Z_e \ge 3\text{--}5\,\Omega$), su implementación física en etapas analógicas OFDM resulta inviable y costosa \cite{Hallak2013Coexistence}.
+En transmisiones OFDM multiportadora, la impedancia del circuito emisor en estado de transmisión ($TX$) debe ser extremadamente baja ($Z_1 \approx 0\,\Omega$) para garantizar la máxima transferencia de tensión hacia la red ($V_{TX}$) \cite{6525864}. Sin embargo, cuando operan múltiples transmisores no interoperables en la misma línea, esta baja impedancia en TX provoca la absorción y atenuación de la señal útil en fases adyacentes \cite{6525864}. Aunque la norma CENELEC EN 50065-7 fija restricciones de impedancia mínima en recepción/transmisión ($Z_e \ge 3\text{--}5\,\Omega$), su implementación física en etapas analógicas OFDM resulta inviable y costosa \cite{6525864}.
 
-Para solventar esta limitación sin violar los límites de compatibilidad electromagnética, el hardware del concentrador utiliza un **esquema de acoplamiento capacitivo/inductivo trifásico con desacoplo de canal** \cite{Hallak2013Coexistence, Sendin2011Strategies}. Mediante una red de filtros pasa-banda sintonizados de alto orden y transformadores de aislamiento galvánico de alta frecuencia, el driver inyecta la señal de forma simétrica o seleccionable fase a fase, minimizando el acoplamiento parásito inter-fase y aislando la etapa digital de las tensiones de $230/400\text{ VAC}$.
+Para solventar esta limitación sin violar los límites de compatibilidad electromagnética, el hardware del concentrador utiliza un \textbf{esquema de acoplamiento capacitivo/inductivo trifásico con desacoplo de canal} \cite{6525864, 5764420}. Mediante la red de filtros pasa-banda sintonizados de alto orden y transformadores de aislamiento galvánico de alta frecuencia, el driver inyecta la señal de forma simétrica o seleccionable fase a fase, minimizando el acoplamiento parásito inter-fase y aislando la etapa digital de las tensiones de $230/400\text{ VAC}$.
 
 \subsection{Ampliación a Banda Extendida (FCC) y Módulo Celular LTE}
 \label{subsec:banda_fcc_lte}
 
-Aunque la banda CENELEC-A (9--95 kHz) es el estándar de telegestión regulado en Europa, los ensayos empíricos de canal en entornos industriales demuestran que esta franja es altamente susceptible al ruido pulsante de motores y electrónica de potencia, registrando picos de interferencia de hasta $74\text{ dB}\mu\text{V}$ a $71\text{ kHz}$ \cite{Mishra2015Suitable}. Por el contrario, la banda FCC (10--490 kHz, centrada en $270\text{ kHz}$) presenta un suelo de ruido significativamente menor ($60\text{ dB}\mu\text{V}$), permitiendo alcanzar caudales de transmisión de hasta $34.28\text{ kbps}$ con modulaciones D8PSK y tasas de error de paquete ($\text{PER} < 1\%$) \cite{Mishra2015Suitable}. Por ello, el hardware del AFE se diseña con un ancho de banda flexible capaz de operar tanto en CENELEC-A como en la banda extendida FCC.
+Aunque la banda CENELEC-A (9--95 kHz) es el estándar de telegestión regulado en Europa, los ensayos empíricos de canal en entornos industriales demuestran que esta franja es altamente susceptible al ruido pulsante de motores y electrónica de potencia, registrando picos de interferencia de hasta $74\text{ dB}\mu\text{V}$ a $71\text{ kHz}$ \cite{7390450}. Por el contrario, la banda FCC (10--490 kHz, centrada en $270\text{ kHz}$) presenta un suelo de ruido significativamente menor ($60\text{ dB}\mu\text{V}$), permitiendo alcanzar caudales de transmisión de hasta $34.28\text{ kbps}$ con modulaciones D8PSK y tasas de error de paquete ($\text{PER} < 1\%$) \cite{7390450}. Por ello, el hardware del AFE se diseña con un ancho de banda flexible capaz de operar tanto en CENELEC-A como en la banda extendida FCC.
 
-Para la red de transporte WAN hacia el sistema central (HES), la placa incluye un zócalo M.2 / mini-PCIe para la integración de un módem celular LTE Cat-1 / Cat-M1 / NB-IoT con soporte de tarjeta eSIM/SIM industrial y antena externa.
+Para la red de transporte WAN hacia el sistema central (HES), la placa auxiliar de expansión incluye un módulo módem celular LTE Cat-1 / NB-IoT con soporte de tarjeta eSIM/SIM industrial y antena externa.
 
 \subsection{Módulo RF Híbrido Inalámbrico (IEEE Std 1901.3-2025)}
 \label{subsec:rf_hibrido}
 
 Para solventar escenarios de atenuación extrema en la línea eléctrica (tales como la apertura de seccionadores o la presencia de filtros bloqueadores de alta impedancia), la arquitectura de hardware reserva una interfaz SPI/UART de alta velocidad para un módulo transceptor de radiofrecuencia (RF) sub-1 GHz.
 
-Esta aproximación responde a las especificaciones del nuevo estándar **IEEE Std 1901.3-2025**, el cual establece el marco internacional para comunicaciones híbridas PLC/RF en redes inteligentes \cite{IEEE1901_3_2025}. La combinación síncrona de ambos medios en la capa MAC permite elevar la tasa de entrega de paquetes del $70\%$ (solo PLC) o $82\%$ (solo RF) a cifras superiores al **$90\%$** mediante enrutamiento híbrido dinámico \cite{Mishra2015Suitable}.
+Esta aproximación responde a las especificaciones del nuevo estándar \textbf{IEEE Std 1901.3-2025}, el cual establece el marco internacional para comunicaciones híbridas PLC/RF en redes inteligentes \cite{11267209}. La combinación síncrona de ambos medios en la capa MAC permite elevar la tasa de entrega de paquetes del $70\%$ (solo PLC) o $82\%$ (solo RF) a cifras superiores al \textbf{$90\%$} mediante enrutamiento híbrido dinámico \cite{7390450}.
 
-Conforme a la norma IEEE 1901.3-2025, el módulo RF opera en las bandas ISM ofreciendo tasas de velocidad de $25\text{ kbps}$ a $2\text{ Mbps}$, con modulaciones BPSK, QPSK y 16-QAM, y una sensibilidad de receptor de hasta $-109\text{ dBm}$ (modo MCS0) \cite{IEEE1901_3_2025}. El módulo actúa de forma transparente como estación o repetidor híbrido (\textit{Proxy Coordinator}, PCO), permitiendo que la MPU del concentrador alterne dinámicamente entre el canal PLC y el enlace inalámbrico según la métrica de calidad de enlace RSSI/SNR recibida \cite{IEEE1901_3_2025}.
+Conforme a la norma IEEE 1901.3-2025, el módulo RF debe operar en las bandas ISM ofreciendo tasas de velocidad de $25\text{ kbps}$ a $2\text{ Mbps}$, con modulaciones BPSK, QPSK y 16-QAM, y una sensibilidad de receptor de hasta $-109\text{ dBm}$ (modo MCS0) \cite{11267209}. El módulo actúa de forma transparente como estación o repetidor híbrido (\textit{Proxy Coordinator}, PCO), permitiendo que la MPU del concentrador alterne dinámicamente entre el canal PLC y el enlace inalámbrico según la métrica de calidad de enlace RSSI/SNR recibida \cite{11267209}.
+
+\section{Subsistema de Metrología Trifásica de Precisión y Calibración}
+\label{sec:metrologia_trifasica}
+
+La función de supervisión de baja tensión y metrología de balance en el centro de transformación exige la captura precisa de parámetros eléctricos trifásicos en tiempo real \cite{10488780}. En la arquitectura unificada del concentrador de datos, esta tarea se delega en el microcontrolador especializado \textbf{PIC32CXMTC} de Microchip, el cual integra un núcleo AFE (\textit{Analog Front-End}) de metrología hardware de alta resolución operando en coordinación con la librería de metrología en firmware (Harmony v3). Sin emabrgo, para el caso de metrología trifásica, el sensado se debe delegar a un chip de metrología dedicado, el \textbf{ATSENSE301} de Microchip, el cual constituirá el AFE de medición trifásica de alta resolución, con 3 canales de tensión y 4 canales de corriente, gestionado con la librería de metrología de Microchip desde el PIC32 a través de comunicación SPI.
+
+Esta integración permite consolidar en un único circuito integrado las funciones de cálculo energético, procesamiento fasorial, temporización RTC y ejecución de la pila MAC del protocolo PRIME, optimizando drásticamente la lista de materiales (BOM) y el espacio en placa.
+
+\subsection{Acondicionamiento Analógico y Canal de Entrada (AFE)}
+\label{subsec:acondicionamiento_analogo}
+
+Para cumplir con la categoría de instalación \textbf{CAT III 600 V} (opcionalmente CAT IV) definida en la norma EN 61000-6-5 / EN 60255-27 y garantizar la inmunidad ante perturbaciones electromagnéticas de la red eléctrica, la etapa analógica de acondicionamiento ha sido dimensionada con criterios de alta linealidad y bajo coeficiente de temperatura (TCR):
+
+\begin{enumerate}
+    \item \textbf{Canal de Tensión Trifásico:} Diseñado para un rango de medida nominal de $127/220\text{ VAC}$ a $230/440\text{ VAC} \pm 20\%$ con una frecuencia de red de $45\text{--}65\text{ Hz}$ (Clase F2 $\pm 1\%$). La tensión de fase se atenuará mediante una red divisora resistiva de precisión de alta impedancia de entrada ($Z_{in} \ge 800\text{ k}\Omega$), utilizando componentes de grado automoción AEC-Q200 con tolerancias estrechas ($\le 0.1\%$) y derivación térmica mínima, de $25 \text{ PPM/ºC}$ o menor. El consumo propio de la etapa de tensión se mantiene por debajo de $0.07\text{ VA}$ por fase, asegurando un umbral de arranque ($V_{start}$) de $10\text{ VAC}$.
+    
+    \item \textbf{Canal de Corriente Trifásico y Neutro:} El subsistema está preparado para la conexión de transformadores de corriente (CT) externos con relación nominal configurable (típicamente $400/5\text{ A}$ o $1200/5\text{ A}$ para aplicaciones de subestación), con una corriente nominal $I_n = 5\text{ A}$ y un rango dinámico de medida desde $2\text{ mA}$ hasta $10\text{ A}$ ($I_{start} = 2\text{ mA}$). Las entradas de corriente incorporan transformadores de corriente de precisión internamente, con relación de transformación 1000/1 con sus respectivas resistencias de carga (\textit{burden resistors}) de alta precisión. La etapa soporta impulsos de sobrecorriente cortocircuitada de $20 \times I_{max}$ ($200\text{ A}$) durante $0.5\text{ s}$ sin degradación métrica, conforme a la norma EN 62053-21, con un consumo analógico de entrada $\le 0.02\text{ VA}$.
+\end{enumerate}
+
+El filtrado analógico secundario se implementa mediante filtros pasa-bajo RC de primer orden antialiasing y cuentas de ferrita (\textit{ferrite beads}) de baja inductancia distribuidas en los rieles de alimentación analógicos ($\text{VDD}_{\text{ANA}}$), garantizando un alto rechazo frente al ruido de conmutación de la PSU de alta frecuencia y las señales de acoplamiento PLC.
+
+\subsection{Clases de Precisión y Funciones de Medición}
+\label{subsec:clases_precision_mediciones}
+
+El motor de metrología del PIC32CXMTC procesa de forma continua muestras síncronas para calcular magnitudes instantáneas y acumuladas con una tasa de refresco $\le 1\text{ s}$. El hardware cumple con los estándares internacionales de telegestión energética:
+\begin{itemize}
+    \item \textbf{Energía Activa:} Clase B (o superior, $\pm 1\%$ de error de medida) según la norma europea \textbf{EN 50470-3}.
+    \item \textbf{Energía Reactiva:} Clase 2 (o superior) según la norma \textbf{EN 62053-23}.
+    \item \textbf{Medición por Fase y Total:} Registros bidireccionales de energía activa importada y exportada ($+A / -A$), y energía reactiva en los cuatro cuadrantes ($+R_i, +R_c, -R_i, -R_c$).
+    \item \textbf{Períodos de Integración de Potencia:} Cálculo de valores medios de potencia activa y reactiva configurables en intervalos discretos de 5, 10, 15, 20, 30 y 60 minutos.
+    \item \textbf{Detección de Eventos de Calidad de Suministro:} Supervisión continua de huecos de tensión (\textit{sags}), sobretensiones (\textit{swells}), pérdida de fase individual ($L1, L2, L3$), corte de neutro y registro de desequilibrios mediante estampados de tiempo de alta precisión aportados por el RTC interno.
+\end{itemize}
+
+\subsection{Aislamiento Galvánico e Interfaz SPI con la MPU Host}
+\label{subsec:aislamiento_metrologia_cpu}
+
+Puesto que el circuito del AFE de metrología está referenciado al neutro de la red de baja tensión ($N$), todo el bloque de procesamiento metrológico se encuentra dentro del \textbf{Dominio de Medición (MET-Domain)}. 
+
+Para comunicar el  AFE (ATSENSE301) con la MPU principal (PIC32CXMTC) (perteneciente al Dominio SELV) sin comprometer la seguridad galvánica, se implementa un bus SPI aislado de alta velocidad asistido por líneas de interrupción por cambio de estado (GPIO). El aislador digital capacitivo/magnético proporciona una barrera de aislamiento de tensión de al menos $2.5\text{ kV}_{\text{RMS}}$ ($60\text{ seg}$) con capacidad para soportar impulsos de choque de $\pm 5\text{ kV}_p$ según \textbf{EN 60255-27}. 
+
+Además, se integran buffers unidireccionales para evitar la retroalimentación de corriente (\textit{backfeeding}) entre los dominios alimentados por el banco de supercondensadores en escenarios de \textit{``último suspiro''} (\textit{last gasp}) tras un corte de suministro de red.
+
+\subsection{Procedimiento de Calibración Vectorial Trifásica}
+\label{subsec:calibracion_vectorial}
+
+Debido a las tolerancias físicas de los divisores resistivos, la no linealidad de los transformadores de corriente CT externos y los desfasajes introducidos por los componentes pasivos del AFE, cada unidad fabricada debe someterse a un proceso de calibración métrica previo a su despliegue industrial. 
+
+El concentrador implementa el \textbf{enfoque de calibración vectorial de Microchip}, estructurado en un flujo secuencial automatizado mediante banco de prueba patrón y consola de comandos (Figura \ref{fig:flujo_calibracion_vectorial}):
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{figures/flujo_calibracion_vectorial.png}
+    \caption{Diagrama de flujo para el procedimiento de calibración vectorial trifásica en el microcontrolador PIC32CXMTC.}
+    \label{fig:flujo_calibracion_vectorial}
+\end{figure}
+
+El algoritmo calcula y escribe en los registros no volátiles de la librería de metrología en dos conjuntos principales de constantes de ajuste:
+
+\begin{enumerate}
+    \item \textbf{Calibración de Magnitud (Ganancia RMS):} Se aplica un punto de prueba de tensión y corriente nominales puramente resistivo ($\cos\phi = 1.0$). El sistema compara los valores de tensión y corriente medidos por el registro ADC no calibrado ($U_{rmsX}, I_{rmsX}$) frente a la referencia patrones inyectada por el banco ($U_{ref}, I_{ref}$), calculando los factores de ganancia de magnitud:
+    \begin{equation}
+        \text{CAL\_M\_VX} = \text{int} \left( \frac{U_{ref} \cdot K_1}{U_{rmsX}} \right), \quad \text{CAL\_M\_IX} = \text{int} \left( \frac{I_{ref} \cdot K_2}{I_{rmsX}} \right)
+    \end{equation}
+    donde $X \in \{A, B, C, N\}$ representa la fase calibrada y $K_1, K_2$ son constantes de escala del formato numérico interno.
+
+    \item \textbf{Calibración de Fase (Desfase V-I y V-V):} Para corregir el error angular introducido por la inductancia parásita de los CTs y los filtros analógicos, se inyecta una corriente de prueba con un desfase conocido de $60^\circ$ inductivo ($\cos\phi = 0.5$). El algoritmo ajusta los registros de retardo de fase individuales (\texttt{CAL\_PH\_IA}, \texttt{CAL\_PH\_IB}, \texttt{CAL\_PH\_IC}) minimizando la desviación de potencia reactiva calculada. Posteriormente, se calibra el error de fase relativo entre las líneas de tensión (\texttt{CAL\_PH\_VB}, \texttt{CAL\_PH\_VC}) tomando la Fase A como referencia vectorial de $0^\circ$.
+
+    \item \textbf{Compensación de Offset de Potencia:} Finalmente, en ausencia de corriente aplicada ($I = 0\text{ A}$), se ejecuta la prueba de insensibilidad al creep (\textit{anti-creeping}), ajustando los registros de offset de potencia activa y reactiva (\texttt{POWER\_OFFSET\_P/Q}) para cancelar el ruido de fondo inducido por conmutaciones térmicas o acoplamiento magnético cercano.
+\end{enumerate}
+
+Una vez completado el flujo, el firmware valida el checksum de los parámetros y bloquea los registros de calibración mediante la palabra clave de control (\texttt{CalStart = 0x8765}), garantizando la trazabilidad métrica durante todo el ciclo de vida operativo de 15 años del equipo.
+
 
