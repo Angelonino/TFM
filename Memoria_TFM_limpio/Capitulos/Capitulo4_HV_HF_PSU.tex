@@ -1,18 +1,160 @@
-\chapter{Validación experimental}
+\chapter{Fuente de Alimentación de Alta Tensión y Alta Frecuencia (HV/HF PSU)}
+\label{HV_HF_PSU}
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,
+\section{Requerimientos de Diseño}
+\label{sec:requerimientos_psu}
 
-\ref{tab:etiqueta_tabla}
+Como se justificó en el Capítulo \ref{ch:state_of_the_art} (Sección \ref{subsec:topologias_alta_frecuencia_tension}), la fuente de alimentación del DCU de nueva generación no puede diseñarse como un bloque genérico de conversión DC, sino que debe concebirse desde el primer momento como un subsistema que debe coexistir electromagnéticamente con el propio módem PLC al que alimenta. A esta restricción de frecuencia se suman los requisitos habituales de cualquier equipo de campo instalado en un CT: un ciclo de vida de 15 años sin mantenimiento (Sección \ref{subsec:fuente_alimentacion_15anos}), ausencia de refrigeración activa, y la necesidad de sostener los distintos dominios de aislamiento galvánico descritos en el Capítulo \ref{ch:hardware_design} (Sección \ref{subsec:estrategia_aislamiento}). Esta sección recopila el conjunto de requisitos eléctricos, de aislamiento y de compatibilidad electromagnética (EMC) que se han utilizado como punto de partida para el dimensionamiento de la fuente.
+
+\subsection{Requisitos Eléctricos de Entrada: Rango de Operación Nominal y Escenarios Anómalos de Red}
+\label{subsec:requisitos_entrada_psu}
+
+La fuente se alimenta directamente de la red trifásica de baja tensión del CT ($L1/L2/L3/N$), debiendo permanecer operativa incluso si únicamente una de las tres fases se encuentra energizada. A lo largo de toda su vida útil, la fuente debe ser capaz de operar de forma continua e ininterrumpida dentro de un rango de tensión de entrada nominal comprendido aproximadamente entre 100 y 265 $\text{V}_{\text{AC,RMS}}$ (fase-neutro), con una frecuencia de red de 50 a 60 Hz.
+
+Además de este régimen de operación normal, el diseño debe contemplar de forma explícita dos escenarios anómalos de red, frente a los cuales la fuente debe sobrevivir sin degradación permanente durante un tiempo acotado, aunque sea reduciendo temporalmente sus prestaciones:
+
+\begin{itemize}
+    \item \textbf{Sobretensión transitoria de red:} la fuente debe soportar tensiones de entrada de hasta aproximadamente $437\ \text{V}_{\text{AC,RMS}}$ durante un periodo de hasta 1 hora, escenario asociado a huecos de regulación o faltas transitorias aguas arriba en la red de distribución.
+    \item \textbf{Fallo de neutro (\textit{neutral fault}):} en el supuesto de que el conductor de neutro quede accidentalmente conectado a una de las fases, la tensión percibida por el equipo respecto a su referencia de neutro puede elevarse hasta aproximadamente 1,9 veces la tensión nominal, debiendo la fuente mantenerse operativa frente a esta condición durante periodos de hasta 4 horas.
+\end{itemize}
+
+Estos dos escenarios anómalos condicionan de forma directa el dimensionamiento en tensión de los semiconductores de potencia de la etapa primaria y de los propios devanados del transformador, que deben soportar picos de tensión considerablemente superiores a los que se derivarían de considerar únicamente el régimen de operación nominal sin daño ni degradación.
+
+\subsection{Requisitos de Aislamiento Galvánico}
+\label{subsec:requisitos_aislamiento_psu}
+
+De acuerdo con la segmentación por dominios de masa presentada en la Sección \ref{subsec:estrategia_aislamiento}, la fuente constituye la única vía de energía entre el \textbf{Dominio de Alta Tensión y Potencia (HV-Domain)} y los dominios de baja tensión del equipo. Por tratarse de un equipo de \textbf{Clase II} (doblemente aislado, sin conexión a tierra de protección), toda la energía transferida a través del transformador debe atravesar una barrera de \textbf{aislamiento reforzado}, y no una simple barrera de aislamiento básico o funcional.
+
+En términos cuantitativos, esta barrera debe ser capaz de soportar, como mínimo:
+\begin{itemize}
+    \item Un ensayo dieléctrico de tensión aplicada de al menos $2\ \text{kV}_{\text{RMS}}$ durante 60 segundos, así como transitorios de impulso de $\pm 5\ \text{kV}_{\text{p}}$, pudiendo alcanzar hasta $6$--$8\ \text{kV}_{\text{p}}$ en los ensayos de mayor severidad contemplados para equipos de esta categoría de sobretensión.
+    \item Una resistencia de aislamiento no inferior a $100\ \text{M}\Omega$ medida a $500\ \text{V}_{\text{DC}}$.
+\end{itemize}
+
+Estos valores son mucho más exigentes que los habituales en fuentes conmutadas de electrónica de consumo, y condicionan de forma directa las distancias de aislamiento (\textit{creepage} y \textit{clearance}) exigidas en el propio transformador y en el resto de componentes que atraviesan la barrera primario-secundario (optoacopladores, condensadores de seguridad Y, etc.).
+
+\subsection{Requisitos de Compatibilidad Electromagnética (EMC)}
+\label{subsec:requisitos_emc_psu}
+
+Tal y como se mencionó en la Sección \ref{subsec:vacio_normativo_2_150kHz}, el diseño de la fuente debe superar, además de los ensayos de emisión conducida y radiada habituales de cualquier equipo conmutado, la batería de ensayos de inmunidad definida por la serie de normas IEC/EN 61000-4. A continuación se detallan los niveles de severidad concretos exigidos en cada ensayo.
+
+\subsubsection*{Emisiones electromagnéticas}
+
+\begin{itemize}
+    \item \textbf{Emisiones conducidas} (EN 55032 en el puerto de alimentación AC, EN 55033 en puertos de comunicaciones), \textbf{Clase B}: límites de $66$--$56\ \text{dB}\mu\text{V}$ (cuasi-pico) y $56$--$46\ \text{dB}\mu\text{V}$ (promedio) entre 0,15 y 0,50 MHz; $56\ \text{dB}\mu\text{V}$ (cuasi-pico) y $46\ \text{dB}\mu\text{V}$ (promedio) entre 0,50 y 5 MHz; y $60\ \text{dB}\mu\text{V}$ (cuasi-pico) y $50\ \text{dB}\mu\text{V}$ (promedio) entre 5 y 30 MHz.
+    \item \textbf{Emisiones radiadas} (EN 55032), \textbf{Clase B}: $30\ \text{dB}\mu\text{V/m}$ (cuasi-pico) entre 30 y 230 MHz, y $37\ \text{dB}\mu\text{V/m}$ (cuasi-pico) entre 230 y 1000 MHz, añadiendo $10\ \text{dB}$ si la medida se realiza a 3 m en lugar de a la distancia normalizada.
+    \item Adicionalmente, el equipo debe superar los ensayos de emisión de armónicos de corriente (EN 61000-3-2) y de fluctuaciones de tensión y \textit{flicker} (EN 61000-3-3), cuyos límites concretos dependen de la clase de equipo de baja potencia y no se detallan en este resumen.
+\end{itemize}
+
+\subsubsection*{Ensayos de inmunidad electromagnética}
+
+La Tabla \ref{tab:requisitos_emc_inmunidad} resume los niveles de severidad exigidos en cada ensayo de inmunidad, así como el criterio de aceptación asociado: el \textbf{Criterio A} exige ausencia total de degradación de las prestaciones y de interrupciones de funcionamiento durante el ensayo, mientras que el \textbf{Criterio B} admite una degradación (mientras no se comprometa el funcionamiento y seguridad del equipo) o interrupciones temporales de funcionamiento siempre que el equipo se recupere de forma autónoma una vez finalizado el estímulo, sin pérdida de datos ni necesidad de intervención del operador.
 
 \begin{table}[!h]
 \centering
-\begin{tabular}{|c|c|c|}
+\small
+\begin{tabular}{|p{4.6cm}|p{7.5cm}|p{2.2cm}|}
 \hline
-Alumnos & Media & \multicolumn{1}{l|}{Nota} \\ \hline
-Pérez  & 3,4                        & Suspenso           \\ \hline
-Azaña  & 8,7                        & Notable          \\ \hline
+\textbf{Ensayo (norma)} & \textbf{Nivel Aplicado} & \textbf{Criterio} \\ \hline
+Descargas electrostáticas (EN 61000-4-2) & $\pm 8\ \text{kV}$ por contacto / $\pm 15\ \text{kV}$ por aire (10 descargas, 1 s entre descargas) & A \\ \hline
+Campo electromagnético de RF radiado (EN 61000-4-3) & $10\ \text{V/m}$, 80--3000 MHz, modulación AM 80\,\% a 1 kHz & A \\ \hline
+Transitorios eléctricos rápidos en ráfagas (EN 61000-4-4) & $\pm 4\ \text{kV}$ en la entrada AC y $\pm 2\ \text{kV}$ en líneas de señal, $T_r/T_h = 5/50$ ns & B \\ \hline
+Sobretensiones tipo rayo (EN 61000-4-5) & $\pm 6\ \text{kV}$ (modo diferencial y modo común) en la entrada AC, y $\pm 4\ \text{kV}$ en señales de comunicación, con forma de onda $1,2/50\ \mu\text{s}$ & B \\ \hline
+Perturbaciones conducidas por RF (EN 61000-4-6) & $10\ \text{V}$, 0,15--80 MHz, modulación AM 80\,\% a 1 kHz, en puertos de entrada, salida y señal & A \\ \hline
+Campo magnético a frecuencia de red (EN 61000-4-8) & $100\ \text{A/m}$ continuo (1 min) y $1000\ \text{A/m}$ de corta duración (1--3 s), a 50 Hz & A \\ \hline
+Campo magnético oscilatorio amortiguado (EN 61000-4-10) & $100\ \text{A/m}$, 0,1--1 MHz & A \\ \hline
+Armónicos de tensión de baja frecuencia (EN 61000-4-13) & Clase 2 en la entrada AC & A \\ \hline
+Onda oscilatoria amortiguada / \textit{ring wave} (EN 61000-4-18) & $2,5\ \text{kV}$ línea-tierra y $1\ \text{kV}$ entre líneas, durante 60 s & A \\ \hline
+Huecos, interrupciones y variaciones de tensión (EN 61000-4-11) & Huecos hasta tensión residual del $0\%$ (10 y 20 ms), $40\%$ (200 ms), $70\%$ (0,5 s) y $80\%$ (5 s); interrupción corta al $0\%$ durante 5 s; variación en escalones del $10\%$ entre 100 y 265 V & B (A en hueco al $80\%$ y variación) \\ \hline
 \end{tabular}
-\caption{Pie de tabla}
-\label{tab:etiqueta_tabla}
+\caption{Niveles de severidad e inmunidad electromagnética exigidos a la fuente HV/HF.}
+\label{tab:requisitos_emc_inmunidad}
 \end{table}
+
+Nótese que, según el criterio interno del equipo, los niveles de sobretensión tipo rayo (\textit{surge}, EN 61000-4-5) se elevan por encima de los mínimos normativos anteriores hasta $6\ \text{kV}$ en la entrada AC (tanto en modo diferencial como en modo común) y hasta $4\ \text{kV}$ en las líneas de señal, con el fin de dotar a la fuente de un margen adicional de robustez frente a transitorios de red severos.
+
+A esta batería de ensayos de inmunidad conducida se añade el requisito, ya introducido en el Capítulo \ref{ch:state_of_the_art}, de que la frecuencia de conmutación fundamental de la fuente se sitúe por encima de los 500 kHz, superando ampliamente el límite superior de la banda FCC (hasta 490 kHz), de forma que ni la frecuencia fundamental de conmutación ni sus armónicos de mayor energía interfieran con la recepción PLC del propio equipo.
+
+\subsection{Requisitos de Potencia y Arquitectura de Salidas}
+\label{subsec:requisitos_salidas_psu}
+
+El presupuesto de potencia total consumido por el equipo desde la red es reducido, del orden de la decena de vatios, lo cual, combinado con la ausencia de refrigeración activa y el requisito de vida útil de 15 años, obliga a maximizar el rendimiento de conversión y a minimizar la disipación térmica en todas las etapas. Esto se traduce en la necesidad de reducir las perdidas de la fuente (de conducción y de conmutación) lo máximo posible.
+
+A diferencia de una fuente convencional de salida única, este diseño requiere \textbf{tres salidas independientes de $14\ \text{V}_{\text{DC}}$ nominales}, cada una de ellas asociada a un dominio de masa distinto del equipo:
+
+\begin{enumerate}
+    \item Una \textbf{salida principal}, con aislamiento reforzado, encargada de alimentar la totalidad del \textbf{Dominio de Procesamiento y Comunicaciones SELV} descrito en la Sección \ref{subsec:estrategia_aislamiento}: el módulo de procesamiento (SoM), el microcontrolador PIC32CXMTC, el módem PL460, los transceptores Ethernet y el resto de periféricos digitales de baja tensión.
+    \item Una \textbf{salida referenciada al neutro} de la red de baja tensión, destinada en exclusiva a alimentar el chip de metrología (ATSENSE301), que por motivos de precisión de medida debe compartir referencia eléctrica con el propio neutro de red (\textbf{MET-Domain}, Sección \ref{subsec:aislamiento_metrologia_cpu}).
+    \item Una \textbf{salida adicional dedicada}, destinada exclusivamente a la propia electrónica de control de la fuente (\textit{bias supply}), de forma que la lógica de control se mantenga alimentada de manera estable en todo momento y no dependa de la carga instantánea de las otras dos salidas ni de la tensión de entrada del equipo.
+\end{enumerate}
+
+Esta arquitectura de tres salidas independientes, cada una asociada a un dominio de masa distinto, es la que condiciona directamente la elección de topología y el diseño del transformador que se describen en la Sección \ref{sec:topologia_psu}.
+
+\section{Topología y Descripción del Diseño}
+\label{sec:topologia_psu}
+
+\subsection{Selección de Topología: Flyback Síncrona con Conmutación a Tensión Nula (ZVS)}
+\label{subsec:topologia_flyback_sincrono_zvs}
+
+De entre las técnicas de conmutación suave (\textit{Soft-Switching}) enumeradas en la Sección \ref{subsec:topologias_alta_frecuencia_tension} como estrategia para operar a alta frecuencia sin degradar el ruido electromagnético conducido, este equipo adopta una topología \textbf{Flyback Síncrona} con \textbf{conmutación a tensión nula} (\textit{Zero Voltage Switching, ZVS}), conmutando a una frecuencia fundamental superior a 500 kHz.
+
+%MUY IMPORTANTE: Preguntar a Javier si lo que se dice en este siguiente párrafo es correcto, y si se puede publicar. En caso de que no, eliminarlo o reescribirlo de forma más genérica.
+Frente a la topología Flyback clásica con rectificación por diodo, la variante \textbf{síncrona} sustituye el diodo de rectificación de uno de los devanados secundarios por un transistor MOSFET controlado activamente, reduciendo las pérdidas de conducción en el secundario y, con ello, la temperatura de operación de la fuente; un aspecto especialmente relevante dado el reducido presupuesto de potencia disponible y la ausencia de refrigeración activa. A su vez, la incorporación de una red auxiliar de \textbf{ZVS} en la etapa primaria permite recircular la energía almacenada en la inductancia de dispersión del transformador y descargar la capacidad parásita del nodo de conmutación antes del enclavamiento (\textit{turn-on}) del transistor primario, logrando una conmutación con tensión prácticamente nula en sus bordes de subida. Esta técnica reduce de forma simultánea las pérdidas de conmutación y el contenido armónico de alta frecuencia generado en cada ciclo, lo cual resulta indispensable para poder operar establemente a frecuencias superiores a 500 kHz sin comprometer los requisitos de EMC recogidos en la Sección \ref{subsec:requisitos_emc_psu}.
+
+% Nota: a la espera de decidir con la empresa qué nivel de detalle se puede publicar, no se incluye en esta versión preliminar la relación de transformación concreta ni los valores de inductancia magnetizante y de dispersión del transformador, por tratarse de información de propiedad intelectual de la empresa.
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.85\textwidth]{Imagenes/topologia_flyback_sincrona_zvs.pdf}
+    \caption{Esquema topológico simplificado de la fuente Flyback Síncrona con ZVS, mostrando la etapa primaria, la red auxiliar de ZVS y las tres salidas secundarias aisladas.}
+    \label{fig:topologia_flyback_sincrona_zvs}
+\end{figure}
+
+\subsection{Transformador Planar Multi-Salida Integrado en PCB}
+\label{subsec:transformador_planar}
+
+El elemento central de la fuente es un \textbf{transformador planar}, construido a medida directamente sobre las capas de cobre de la propia PCB en lugar de recurrir a un componente magnético discreto convencional (tipo \textit{bobbin}). Esta aproximación, habitual en fuentes de alta densidad de potencia que conmutan a frecuencias elevadas, permite un control geométrico mucho más repetible del acoplamiento entre devanados, una menor altura total del componente y una mejor disipación térmica gracias a la gran superficie de cobre expuesta, en comparación con un transformador bobinado de núcleo convencional.
+
+El transformador está compuesto por un total de \textbf{cuatro devanados}: un devanado primario y tres devanados secundarios, cada uno de ellos diseñado para entregar una tensión nominal de 14 V, correspondientes a las tres salidas descritas en la Sección \ref{subsec:requisitos_salidas_psu}. De los tres devanados secundarios, el correspondiente a la alimentación principal del sistema (Dominio SELV) incorpora \textbf{aislamiento reforzado} frente al primario, de acuerdo con los requisitos recogidos en la Sección \ref{subsec:requisitos_aislamiento_psu}, mientras que los dos devanados restantes (metrología y control propio) se diseñan con los aislamientos funcionales o básicos que corresponden a su dominio de masa respectivo.
+
+En esta versión preliminar de la memoria no se detalla la relación de transformación entre devanados ni los valores de inductancia magnetizante y de dispersión del transformador, al tratarse de parámetros de diseño todavía pendientes de acordar con la empresa en cuanto a su nivel de divulgación.
+
+\subsection{Arquitectura de las Tres Salidas Aisladas y su Correspondencia con los Dominios de Masa}
+\label{subsec:arquitectura_salidas_psu}
+
+La Figura \ref{fig:topologia_flyback_sincrona_zvs} resume la correspondencia entre cada uno de los tres devanados secundarios y el dominio de masa que alimenta:
+
+\begin{itemize}
+    \item El devanado con \textbf{aislamiento reforzado} alimenta, tras su correspondiente regulación local, la totalidad de la lógica digital de baja tensión del \textbf{Dominio SELV}: módulo de procesamiento (SoM), microcontrolador PIC32CXMTC, módem PL460, transceptores Ethernet y periféricos auxiliares.
+    \item El devanado \textbf{referenciado a neutro} alimenta en exclusiva el chip de metrología ATSENSE301, evitando así introducir ruido de conmutación adicional sobre el resto de dominios digitales y manteniendo la coherencia de referencia eléctrica exigida por la medida de tensión respecto a neutro.
+    \item El tercer devanado alimenta de forma dedicada al \textbf{controlador} de la propia fuente, desacoplando su punto de trabajo de las variaciones de carga que puedan producirse en las otras dos salidas y facilitando un arranque estable del convertidor.
+\end{itemize}
+
+Esta segmentación de salidas por dominio de masa, poco habitual en fuentes conmutadas convencionales de salida única, es consecuencia directa de la arquitectura de aislamiento galvánico multidominio adoptada para todo el equipo, descrita en el Capítulo \ref{ch:hardware_design}.
+
+\subsection{Validación Experimental Preliminar: Formas de Onda}
+\label{subsec:validacion_formas_onda}
+
+A modo de validación preliminar de la conmutación ZVS y de la rectificación síncrona en el secundario, se han capturado en laboratorio, mediante osciloscopio, las formas de onda de tensión y corriente en los nodos de conmutación primario y secundario del prototipo. Estas capturas, que se incorporarán en la versión final de este capítulo (Figuras \ref{fig:formas_onda_zvs} y \ref{fig:formas_onda_rectificacion_sincrona}), permitirán constatar de forma experimental la ausencia de tensión en el instante de conmutación del transistor primario, así como el comportamiento del rizado de salida en cada uno de los tres devanados secundarios.
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{Imagenes/formas_onda_zvs_primario.png}
+    \caption{Formas de onda experimentales (osciloscopio) de la conmutación ZVS en el transistor primario: tensión drenador-fuente y señal de puerta.}
+    \label{fig:formas_onda_zvs}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{Imagenes/formas_onda_rectificacion_sincrona.png}
+    \caption{Formas de onda experimentales (osciloscopio) de la rectificación síncrona y el rizado de salida en los devanados secundarios.}
+    \label{fig:formas_onda_rectificacion_sincrona}
+\end{figure}
+
+\section{Comparativa con Kit de Referencia Microchip}
+\label{sec:comparativa_microchip}
+
+% Pendiente de completar: comparativa cuantitativa (rendimiento, densidad de potencia, EMC) entre la fuente HV/HF Flyback Síncrona diseñada a medida y la solución de referencia basada en kit de evaluación de Microchip, en espera de que Angelo aporte los datos y criterios concretos de comparación.
+
+Esta sección, pendiente de desarrollo, recogerá una comparativa entre la fuente HV/HF diseñada a medida en este trabajo y la solución de referencia disponible en los kits de evaluación de Microchip para aplicaciones similares de telegestión, en términos de rendimiento energético, densidad de potencia, comportamiento EMC y coste de materiales (BOM).
 

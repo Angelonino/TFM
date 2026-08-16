@@ -9,11 +9,12 @@ Antes de abordar en detalle la problemática técnica del concentrador de datos 
 \subsection{Evolución histórica de las comunicaciones por línea eléctrica (PLC)}
 \label{subsec:evolucion_plc}
 
-El uso de la propia red eléctrica como medio de transmisión de información es casi tan antiguo como la propia red de distribución. Ya en la década de 1920 se documentan los primeros sistemas de telemetría sobre líneas de alta tensión, operando en el rango de 15 a 500 kHz \cite{SHARMA2017704}. Luego, en torno a 1930, aparecieron los primeros sistemas de comunicación de banda ultraestrecha (\textit{Ultra-Narrowband PLC, UNB-PLC}), como el sistema TWACS (\textit{Two-Way Automatic Communication System}), concebido para operar de forma óptima sobre la frecuencia fundamental de 60 Hz de la propia red de transporte y distribución \cite{SHARMA2017704}. Estos antecedentes evidencian que la idea de emplear el cableado eléctrico como canal de comunicación es, en esencia, tan antigua como la propia electrificación masiva.
+El uso de la propia red eléctrica como medio de transmisión de información es casi tan antiguo como la propia red de distribución. Ya en la década de 1920 se documentan los primeros sistemas de telemetría sobre líneas de alta tensión, operando en el rango de 15 a 500 kHz \cite{SHARMA2017704}. Luego, en torno a 1930, aparecieron los primeros sistemas de comunicación de banda ultraestrecha (\textit{Ultra-Narrowband PLC, UNB-PLC}), como el sistema TWACS (\textit{Two-Way Automatic Communication System}), concebido para operar de forma óptima sobre la frecuencia fundamental de 60 Hz de la propia red de transporte y distribución \cite{SHARMA2017704}. Estos antecedentes evidencian que la idea de emplear el cableado eléctrico como canal de comunicación es, en esencia, tan antigua como la propia electrificación masiva. En la figura \ref{fig:linea_tiempo_plc} se muestra una línea temporal de la evolución histórica de las comunicaciones PLC aplicadas a la red eléctrica, desde el control de rizado hasta los estándares OFDM de banda estrecha actuales.
 
 \begin{figure}[ht]
     \centering
-    % \includegraphics[width=\textwidth]{Imagenes/linea_tiempo_evolucion_PLC.pdf}
+    \includegraphics[width=\textwidth]{Imagenes/linea_tiempo_evolucion_PLC.pdf}
+    %esta imagen se hizo con IA (claude), a partir de las referencias \cite{SHARMA2017704} y \cite{5764444}, no sé si es necesario dejarlo indicado en el pie de figura
     \caption{Línea temporal de la evolución histórica de las comunicaciones PLC aplicadas a la red eléctrica, desde el control de rizado hasta los estándares OFDM de banda estrecha actuales.}
     \label{fig:linea_tiempo_plc}
 \end{figure}
@@ -48,7 +49,8 @@ De forma anecdótica, resulta útil recordar el recorrido físico que realiza la
 
 \begin{figure}[ht]
     \centering
-    % \includegraphics[width=\textwidth]{Imagenes/cadena_valor_sistema_electrico.pdf}
+    \includegraphics[width=\textwidth]{Imagenes/cadena_valor_sistema_electrico.pdf}
+    %Esta imagen la tengo que cambiar, hacerla yo manualmente. Tengo que usar unos íconos más adecuados
     \caption{Cadena de valor del sistema eléctrico, desde la generación hasta el punto de consumo, pasando por el transporte, la distribución y los centros de transformación MT/BT.}
     \label{fig:cadena_valor_electrico}
 \end{figure}
