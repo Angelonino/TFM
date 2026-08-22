@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none" stroke="#111827" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Cuba principal del transformador -->
+  <rect x="22" y="38" width="56" height="46" rx="3" />
+  <!-- Radiadores laterales de refrigeración -->
+  <line x1="16" y1="46" x2="22" y2="46" />
+  <line x1="16" y1="76" x2="22" y2="76" />
+  <line x1="16" y1="46" x2="16" y2="76" />
+  <line x1="84" y1="46" x2="78" y2="46" />
+  <line x1="84" y1="76" x2="78" y2="76" />
+  <line x1="84" y1="46" x2="84" y2="76" />
+  <!-- Bornas / Pasatapas (Bushings) superiores -->
+  <!-- Borna Izquierda -->
+  <line x1="34" y1="38" x2="34" y2="22" />
+  <line x1="30" y1="26" x2="38" y2="26" />
+  <line x1="31" y1="31" x2="37" y2="31" />
+  <circle cx="34" cy="20" r="2" fill="#111827" />
+  <!-- Borna Central -->
+  <line x1="50" y1="38" x2="50" y2="20" />
+  <line x1="46" y1="24" x2="54" y2="24" />
+  <line x1="47" y1="29" x2="53" y2="29" />
+  <circle cx="50" cy="18" r="2" fill="#111827" />
+  <!-- Borna Derecha -->
+  <line x1="66" y1="38" x2="66" y2="22" />
+  <line x1="62" y1="26" x2="70" y2="26" />
+  <line x1="63" y1="31" x2="69" y2="31" />
+  <circle cx="66" cy="20" r="2" fill="#111827" />
+  <!-- Símbolo de advertencia / Alta tensión en el frontal -->
+  <polygon points="50,48 40,68 60,68" stroke-width="2" />
+  <path d="M51 53 L47 60 L51 60 L49 65" stroke-width="1.8" fill="none" />
+  <!-- Base de apoyo -->
+  <line x1="28" y1="84" x2="28" y2="90" />
+  <line x1="72" y1="84" x2="72" y2="90" />
+  <line x1="20" y1="90" x2="80" y2="90" stroke-width="3" />
+</svg>

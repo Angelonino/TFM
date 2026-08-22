@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none" stroke="#111827" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Línea de suelo -->
+  <line x1="10" y1="88" x2="90" y2="88" stroke-width="3" />
+  
+  <!-- Edificio CT -->
+  <polygon points="50,22 14,40 18,42 18,88 82,88 82,42 86,40" />
+  <line x1="14" y1="40" x2="86" y2="40" />
+  
+  <!-- Pasatapas MT en tejado -->
+  <line x1="38" y1="28" x2="38" y2="14" />
+  <circle cx="38" cy="12" r="2" fill="#111827" />
+  <line x1="35" y1="20" x2="41" y2="20" />
+  <line x1="62" y1="28" x2="62" y2="14" />
+  <circle cx="62" cy="12" r="2" fill="#111827" />
+  <line x1="59" y1="20" x2="65" y2="20" />
+  
+  <!-- Puerta de acceso con línea central -->
+  <rect x="36" y="48" width="28" height="40" rx="1" />
+  <line x1="50" y1="48" x2="50" y2="88" />
+  
+  <!-- Símbolo de advertencia eléctrica en azul oscuro y POR ENCIMA de la línea de la puerta -->
+  <polygon points="50,56 43,68 57,68" stroke="#0A58CA" stroke-width="2" />
+  <path d="M51 60 L48 64 L52 64 L50 67" stroke="#0A58CA" stroke-width="1.8" />
+  
+  <!-- Rejillas laterales de ventilación -->
+  <line x1="24" y1="52" x2="30" y2="52" />
+  <line x1="24" y1="58" x2="30" y2="58" />
+  <line x1="70" y1="52" x2="76" y2="52" />
+  <line x1="70" y1="58" x2="76" y2="58" />
+</svg>
