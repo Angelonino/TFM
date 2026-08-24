@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none" stroke="#111827" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Línea de suelo base -->
+  <line x1="10" y1="90" x2="90" y2="90" stroke-width="3" />
+  
+  <!-- Estructura principal del edificio -->
+  <rect x="20" y="10" width="60" height="80" rx="3" />
+  
+  <!-- Divisiones de plantas -->
+  <line x1="20" y1="25" x2="80" y2="25" />
+  <line x1="20" y1="40" x2="80" y2="40" />
+  <line x1="20" y1="55" x2="80" y2="55" />
+  <line x1="20" y1="70" x2="80" y2="70" />
+  
+  <!-- Cuadrícula de ventanas uniformes -->
+  <!-- Planta 1 (Superior) -->
+  <rect x="25" y="14" width="8" height="8" rx="1" />
+  <rect x="38" y="14" width="8" height="8" rx="1" />
+  <rect x="51" y="14" width="8" height="8" rx="1" />
+  <rect x="64" y="14" width="8" height="8" rx="1" />
+  
+  <!-- Planta 2 -->
+  <rect x="25" y="29" width="8" height="8" rx="1" />
+  <rect x="38" y="29" width="8" height="8" rx="1" />
+  <rect x="51" y="29" width="8" height="8" rx="1" />
+  <rect x="64" y="29" width="8" height="8" rx="1" />
+  
+  <!-- Planta 3 -->
+  <rect x="25" y="44" width="8" height="8" rx="1" />
+  <rect x="38" y="44" width="8" height="8" rx="1" />
+  <rect x="51" y="44" width="8" height="8" rx="1" />
+  <rect x="64" y="44" width="8" height="8" rx="1" />
+  
+  <!-- Planta 4 -->
+  <rect x="25" y="59" width="8" height="8" rx="1" />
+  <rect x="38" y="59" width="8" height="8" rx="1" />
+  <rect x="51" y="59" width="8" height="8" rx="1" />
+  <rect x="64" y="59" width="8" height="8" rx="1" />
+  
+  <!-- Planta Baja (Ground Floor) - CT Room Area (70 to 90) -->
+  <!-- Modificación: Blank wall with centered High Voltage Symbol -->
+  <!-- Draw the blank wall space -->
+  <line x1="20" y1="70" x2="20" y2="90" stroke-width="2.5" />
+  <line x1="80" y1="70" x2="80" y2="90" stroke-width="2.5" />
+  
+  <!-- Símbolo de riesgo eléctrico centrado en la planta baja -->
+  <!-- Center of building is x=50. Ground floor vertical center is roughly y=80 -->
+  <!-- Símbolo: Triángulo con un rayo -->
+  <!-- Triangle -->
+  <polygon points="50,75 43,85 57,85" stroke-width="2" />
+  <!-- Lightning bolt (rayo) -->
+  <path d="M50,77 L46,81 L54,81 L50,84" stroke-width="1.8" fill="none" />
+  
+  <!-- Detalles de Azotea (Roof structure) - Mantenidos -->
+  <!-- HVAC Unit simplified -->
+  <rect x="38" y="5" width="24" height="5" rx="1" />
+  <!-- Antenna spike -->
+  <line x1="50" y1="5" x2="50" y2="0" stroke-width="3" />
+  <!-- Cross line for antenna -->
+  <line x1="45" y1="5" x2="55" y2="5" />
+</svg>
