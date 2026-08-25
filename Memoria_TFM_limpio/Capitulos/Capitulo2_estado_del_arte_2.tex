@@ -139,7 +139,7 @@ El protocolo PRIME organiza la subred del CT mediante una topología en árbol l
 
 \begin{figure}[ht]
     \centering
-    % \includegraphics[width=0.8\textwidth]{tu_diagrama_bloques.png}
+    \includegraphics[width=0.8\textwidth]{Imagenes/topologia_red_PRIME.pdf}
     \caption{Topología dinámica de red PRIME con niveles de conmutación (\textit{Switches}) coordinados por el Nodo Base.}
     \label{fig:prime_topology}
 \end{figure}
@@ -160,7 +160,7 @@ El despliegue masivo de las redes eléctricas inteligentes ha impulsado la comer
 \subsection{Alto coste por modularidad y baja densidad}
 \label{subsec:modularidad_baja_densidad}
 
-Tradicionalmente, los DCUs comerciales y los nodos base de las redes PRIME o G3-PLC se han desarrollado bajo arquitecturas marcadamente modulares \cite{6925952}. En estos dispositivos, es habitual encontrar placas de circuito impreso (PCB) físicamente independientes destinadas a tareas específicas: una tarjeta de procesamiento central (CPU) basada en Linux embebido, tarjetas módems PLC independientes (en muchas ocasiones duplicadas o triplicadas para dar cobertura a escenarios multifásicos mediante acoplamientos físicos independientes \cite{10488780}) y módulos analógicos de adquisición para metrología.
+Tradicionalmente, los DCUs comerciales y los nodos base de las redes PRIME o G3-PLC se han desarrollado bajo arquitecturas marcadamente modulares \cite{6925952}. En estos dispositivos, es habitual encontrar placas de circuito impreso (PCB) físicamente independientes destinadas a tareas específicas: una tarjeta de procesamiento central (CPU) basada en Linux embebido (o una MPU con suficiente potencia de procesamiento y memoria para alojar suficiente nodos de servicio), tarjetas módems PLC independientes (en muchas ocasiones duplicadas o triplicadas para dar cobertura a escenarios multifásicos mediante acoplamientos físicos independientes \cite{10488780}) y módulos analógicos de adquisición para metrología.
 
 Esta aproximación modular presenta inconvenientes críticos que lastran la viabilidad técnica y económica del equipo:
 \begin{itemize}
@@ -222,6 +222,12 @@ A nivel regulatorio global, la segmentación espectral para NB-PLC (frecuencias 
     \item \textbf{Marco Estadounidense y Global (FCC e IEEE Std 1901.2):} La Comisión Federal de Comunicaciones (FCC) en los Estados Unidos permite transmisiones PLC en la banda extendida de 9 kHz a 490 kHz \cite{6679210}. Con el objetivo de unificar y estandarizar estas tecnologías a escala internacional, el estándar \textbf{IEEE Std 1901.2-2013} define las especificaciones de la capa física (PHY) y de enlace (MAC) para redes NB-PLC por debajo de 500 kHz \cite{6679210}. IEEE 1901.2 contempla esquemas de modulación adaptativa (DBPSK, DQPSK, D8PSK y 16-QAM) complementados con codificación de corrección de errores (\textit{Forward Error Correction, FEC}) basada en códigos convolucionales concatenados con Reed-Solomon o Viterbi, garantizando la coexistencia y resistencia frente a interferencias de banda estrecha y ruido impulsivo \cite{6679210, 7443190}.
 \end{itemize}
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Imagenes/Cenelec_FCC_bands.pdf}
+    \caption{Asignación de bandas espectrales para NB-PLC según los estándares CENELEC y FCC.}
+    \label{fig:Cenelec_FCC_bands}
+\end{figure}
 \subsection{Compatibilidad electromagnética y vacíos normativos en la banda 2--150 kHz}
 \label{subsec:vacio_normativo_2_150kHz}
 
