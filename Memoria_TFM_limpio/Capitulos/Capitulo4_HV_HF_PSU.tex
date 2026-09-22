@@ -16,6 +16,7 @@ Además de este régimen de operación normal, el diseño debe contemplar de for
 \begin{itemize}
     \item \textbf{Sobretensión transitoria de red:} la fuente debe soportar tensiones de entrada de hasta aproximadamente $437\ \text{V}_{\text{AC,RMS}}$ durante un periodo de hasta 1 hora, escenario asociado a huecos de regulación o faltas transitorias aguas arriba en la red de distribución.
     \item \textbf{Fallo de neutro (\textit{neutral fault}):} en el supuesto de que el conductor de neutro quede accidentalmente conectado a una de las fases, la tensión percibida por el equipo respecto a su referencia de neutro puede elevarse hasta aproximadamente 1,9 veces la tensión nominal, debiendo la fuente mantenerse operativa frente a esta condición durante periodos de hasta 4 horas.
+    \item PREGUNTAR ESTO A JAVIER. Realmente son dos escenarios? De por qué tiene que soportar 437Vrms durante una hora si luego los tiene que soportar durante 4 horas? 
 \end{itemize}
 
 Estos dos escenarios anómalos condicionan de forma directa el dimensionamiento en tensión de los semiconductores de potencia de la etapa primaria y de los propios devanados del transformador, que deben soportar picos de tensión considerablemente superiores a los que se derivarían de considerar únicamente el régimen de operación nominal sin daño ni degradación.
@@ -40,11 +41,26 @@ Tal y como se mencionó en la Sección \ref{subsec:vacio_normativo_2_150kHz}, el
 
 \subsubsection*{Emisiones electromagnéticas}
 
-\begin{itemize}
-    \item \textbf{Emisiones conducidas} (EN 55032 en el puerto de alimentación AC, EN 55033 en puertos de comunicaciones), \textbf{Clase B}: límites de $66$--$56\ \text{dB}\mu\text{V}$ (cuasi-pico) y $56$--$46\ \text{dB}\mu\text{V}$ (promedio) entre 0,15 y 0,50 MHz; $56\ \text{dB}\mu\text{V}$ (cuasi-pico) y $46\ \text{dB}\mu\text{V}$ (promedio) entre 0,50 y 5 MHz; y $60\ \text{dB}\mu\text{V}$ (cuasi-pico) y $50\ \text{dB}\mu\text{V}$ (promedio) entre 5 y 30 MHz.
-    \item \textbf{Emisiones radiadas} (EN 55032), \textbf{Clase B}: $30\ \text{dB}\mu\text{V/m}$ (cuasi-pico) entre 30 y 230 MHz, y $37\ \text{dB}\mu\text{V/m}$ (cuasi-pico) entre 230 y 1000 MHz, añadiendo $10\ \text{dB}$ si la medida se realiza a 3 m en lugar de a la distancia normalizada.
-    \item Adicionalmente, el equipo debe superar los ensayos de emisión de armónicos de corriente (EN 61000-3-2) y de fluctuaciones de tensión y \textit{flicker} (EN 61000-3-3), cuyos límites concretos dependen de la clase de equipo de baja potencia y no se detallan en este resumen.
-\end{itemize}
+La Tabla \ref{tab:requisitos_emc_emisiones} recoge los límites concretos de emisión conducida y radiada exigidos a la fuente, desglosados por banda de frecuencia.
+
+\begin{table}[!h]
+\centering
+\small
+\begin{tabular}{|p{2.0cm}|p{3.6cm}|p{8.2cm}|}
+\hline
+\textbf{Tipo de emisión} & \textbf{Norma y clase} & \textbf{Valores concretos} \\ \hline
+\multirow{4}{2.0cm}{Emisiones conducidas} & \multirow{3}{3.6cm}{EN 55032, Clase B (terminales de alimentación AC)} & $0,15$--$0,50$ MHz: cuasi-pico $66$--$56\ \text{dB}\mu\text{V}$ / promedio $56$--$46\ \text{dB}\mu\text{V}$ \\
+ & & $0,50$--$5$ MHz: cuasi-pico $56\ \text{dB}\mu\text{V}$ / promedio $46\ \text{dB}\mu\text{V}$ \\
+ & & $5$--$30$ MHz: cuasi-pico $60\ \text{dB}\mu\text{V}$ / promedio $50\ \text{dB}\mu\text{V}$ \\ \cline{2-3}
+ & EN 55033 (terminales de comunicaciones) & Norma aplicable a estos terminales, sin valores límite concretos especificados en la documentación de referencia consultada. \\ \hline
+\multirow{2}{2.0cm}{Radiada} & \multirow{2}{3.6cm}{EN 55032, Clase B} & $30$--$230$ MHz: cuasi-pico $30\ \text{dB}\mu\text{V/m}$ \\
+ & & $230$--$1000$ MHz: cuasi-pico $37\ \text{dB}\mu\text{V/m}$ (+$10\ \text{dB}$ si la medida se realiza a 3 m en lugar de a la distancia normalizada) \\ \hline
+\end{tabular}
+\caption{Límites de emisión electromagnética conducida y radiada exigidos a la fuente HV/HF.}
+\label{tab:requisitos_emc_emisiones}
+\end{table}
+
+Adicionalmente, el equipo debe superar los ensayos de emisión de armónicos de corriente (EN 61000-3-2) y de fluctuaciones de tensión y \textit{flicker} (EN 61000-3-3), cuyos límites concretos dependen de la clase de equipo de baja potencia y no se detallan en este resumen.
 
 \subsubsection*{Ensayos de inmunidad electromagnética}
 
@@ -78,7 +94,7 @@ A esta batería de ensayos de inmunidad conducida se añade el requisito, ya int
 \subsection{Requisitos de Potencia y Arquitectura de Salidas}
 \label{subsec:requisitos_salidas_psu}
 
-El presupuesto de potencia total consumido por el equipo desde la red es reducido, del orden de la decena de vatios, lo cual, combinado con la ausencia de refrigeración activa y el requisito de vida útil de 15 años, obliga a maximizar el rendimiento de conversión y a minimizar la disipación térmica en todas las etapas. Esto se traduce en la necesidad de reducir las perdidas de la fuente (de conducción y de conmutación) lo máximo posible.
+El presupuesto de potencia total consumido por el equipo desde la red es reducido, del orden de los 10 de vatios, lo cual, combinado con la ausencia de refrigeración activa y el requisito de vida útil de 15 años, obliga a maximizar el rendimiento de conversión y a minimizar la disipación térmica en todas las etapas. Esto se traduce en la necesidad de reducir las perdidas de la fuente (de conducción y de conmutación) lo máximo posible.
 
 A diferencia de una fuente convencional de salida única, este diseño requiere \textbf{tres salidas independientes de $14\ \text{V}_{\text{DC}}$ nominales}, cada una de ellas asociada a un dominio de masa distinto del equipo:
 
@@ -99,23 +115,11 @@ Esta arquitectura de tres salidas independientes, cada una asociada a un dominio
 De entre las técnicas de conmutación suave (\textit{Soft-Switching}) enumeradas en la Sección \ref{subsec:topologias_alta_frecuencia_tension} como estrategia para operar a alta frecuencia sin degradar el ruido electromagnético conducido, este equipo adopta una topología \textbf{Flyback Síncrona} con \textbf{conmutación a tensión nula} (\textit{Zero Voltage Switching, ZVS}), conmutando a una frecuencia fundamental superior a 500 kHz.
 
 %MUY IMPORTANTE: Preguntar a Javier si lo que se dice en este siguiente párrafo es correcto, y si se puede publicar. En caso de que no, eliminarlo o reescribirlo de forma más genérica.
-Frente a la topología Flyback clásica con rectificación por diodo, la variante \textbf{síncrona} sustituye el diodo de rectificación de uno de los devanados secundarios por un transistor MOSFET controlado activamente; además incorporando una red auxiliar de \textbf{ZVS} en la etapa primaria permite recircular la energía almacenada en la inductancia de dispersión del transformador y descargar la capacidad parásita del nodo de conmutación antes del enclavamiento (\textit{turn-on}) del transistor primario, logrando una conmutación con tensión prácticamente nula en sus bordes de subida. Esta técnica reduce de forma simultánea las pérdidas de conmutación y la temperatura de operación de la fuente, un aspecto especialmente relevante dado el reducido presupuesto de potencia disponible y la ausencia de refrigeración activa. A su vez, el contenido armónico de alta frecuencia generado en cada ciclo, lo cual resulta indispensable para poder operar establemente a frecuencias superiores a 500 kHz sin comprometer los requisitos de EMC recogidos en la Sección \ref{subsec:requisitos_emc_psu}.
+Frente a la topología Flyback clásica con rectificación por diodo, la variante \textbf{síncrona} sustituye el diodo de rectificación de uno de los devanados secundarios por un transistor MOSFET controlado activamente; además incorporando una red auxiliar de \textbf{ZVS} en la etapa primaria permite recircular la energía almacenada en la inductancia de dispersión del transformador y descargar la capacidad parásita del nodo de conmutación antes del enclavamiento (\textit{turn-on}) del transistor primario, logrando una conmutación con tensión prácticamente nula en sus bordes de subida. Esta técnica reduce de forma simultánea las pérdidas de conmutación y la temperatura de operación de la fuente, un aspecto especialmente relevante dado el reducido presupuesto de potencia disponible y la ausencia de refrigeración activa. A su vez, reduce el contenido armónico de alta frecuencia generado en cada ciclo, lo cual resulta indispensable para poder operar establemente a frecuencias superiores a 500 kHz sin comprometer los requisitos de EMC recogidos en la Sección \ref{subsec:requisitos_emc_psu}.
 
 % Nota: a la espera de decidir con la empresa qué nivel de detalle se puede publicar, no se incluye en esta versión preliminar la relación de transformación concreta ni los valores de inductancia magnetizante y de dispersión del transformador, por tratarse de información de propiedad intelectual de la empresa.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=1\textwidth]{Imagenes/esquema_PSU.pdf}
-    \caption{Esquema topológico simplificado de la fuente Flyback Síncrona con ZVS, mostrando la etapa primaria, la red auxiliar de ZVS y las tres salidas secundarias aisladas.}
-    \label{fig:topologia_flyback_sincrona_zvs}
-\end{figure}
 
-\begin{figure}[htbp]
-    \centering
-    % \includegraphics[width=0.85\textwidth]{Imagenes/topologia_flyback_sincrona_zvs.pdf}
-    \caption{Formas de Onda tensión y corriente en nodos de conmutación}
-    \label{fig:forma_onda_V-I_osciloscopio}
-\end{figure}
 
 \subsection{Transformador Planar Multi-Salida Integrado en PCB}
 \label{subsec:transformador_planar}
@@ -137,12 +141,26 @@ La Figura \ref{fig:topologia_flyback_sincrona_zvs} resume la correspondencia ent
     \item El tercer devanado alimenta de forma dedicada al \textbf{controlador} de la propia fuente, desacoplando su punto de trabajo de las variaciones de carga que puedan producirse en las otras dos salidas y facilitando un arranque estable del convertidor.
 \end{itemize}
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/esquema_PSU.pdf}
+    \caption{Esquema topológico simplificado de la fuente Flyback Síncrona con ZVS, mostrando la etapa primaria, la red auxiliar de ZVS y las tres salidas secundarias aisladas.}
+    \label{fig:topologia_flyback_sincrona_zvs}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.85\textwidth]{Imagenes/topologia_flyback_sincrona_zvs.pdf}
+    \caption{Formas de Onda tensión y corriente en nodos de conmutación}
+    \label{fig:forma_onda_V-I_osciloscopio}
+\end{figure}
+
 Esta segmentación de salidas por dominio de masa, poco habitual en fuentes conmutadas convencionales de salida única, es consecuencia directa de la arquitectura de aislamiento galvánico multidominio adoptada para todo el equipo, descrita en el Capítulo \ref{ch:hardware_design}.
 
 \subsection{Validación Experimental Preliminar: Formas de Onda}
 \label{subsec:validacion_formas_onda}
 
-A modo de validación preliminar de la conmutación ZVS y de la rectificación síncrona en el secundario, se han capturado en laboratorio, mediante osciloscopio, las formas de onda de tensión y corriente en los nodos de conmutación primario y secundario del prototipo. Estas capturas, que se incorporarán en la versión final de este capítulo (Figuras \ref{fig:formas_onda_zvs} y \ref{fig:formas_onda_rectificacion_sincrona}), permitirán constatar de forma experimental la ausencia de tensión en el instante de conmutación del transistor primario, así como el comportamiento del rizado de salida en cada uno de los tres devanados secundarios.
+A modo de validación preliminar de la conmutación ZVS y de la rectificación síncrona en el secundario, se han capturado en laboratorio, mediante osciloscopio, las formas de onda de tensión y corriente en los nodos de conmutación primario y secundario del prototipo. Estas capturas (Figuras \ref{fig:formas_onda_zvs} y \ref{fig:formas_onda_rectificacion_sincrona}), muestran de forma experimental la ausencia de tensión en el instante de conmutación del transistor primario, así como el comportamiento del rizado de salida en cada uno de los tres devanados secundarios.
 
 \begin{figure}[htbp]
     \centering
