@@ -145,37 +145,6 @@ $N$  & -- & -- & -- & -- & -- & -- \\ \hline
 % Pendiente: análisis de los resultados una vez disponibles las capturas.
 El análisis de estos resultados debe centrarse especialmente en el tramo de 0,5 a 5 MHz, donde cabe esperar la contribución de la frecuencia fundamental de conmutación de la fuente (superior a 500 kHz, Sección \ref{subsec:topologia_flyback_sincrono_zvs}) y de sus primeros armónicos, así como en el tramo inicial de 150 a 500 kHz, en el que el límite es más permisivo pero en el que suele concentrarse el ruido de modo diferencial de las fuentes conmutadas.
 
-\subsection{Emisiones Conducidas en los Puertos de Comunicaciones (EN 55032)}
-\label{subsec:emisiones_conducidas_eth}
-
-\subsubsection*{Descripción del ensayo}
-
-La especificación del cliente exige además medir las emisiones conducidas en los puertos Ethernet (WAN y LAN), también con límites de Clase B. En este caso se mide la perturbación en modo común (asimétrica) que el equipo inyecta en el cable de red, que actuaría como antena en la instalación real. Para ello se utiliza una red de estabilización de impedancia (\textit{Asymmetric Artificial Network, AAN}) o, alternativamente, una sonda de corriente, en el mismo rango de 150 kHz a 30 MHz. Los límites de Clase B de EN 55032 para puertos de red cableada son, medidos en tensión, de $84$--$74\ \text{dB}\mu\text{V}$ en cuasi-pico y $74$--$64\ \text{dB}\mu\text{V}$ en promedio entre 0,15 y 0,5 MHz, y de $74\ \text{dB}\mu\text{V}$ en cuasi-pico y $64\ \text{dB}\mu\text{V}$ en promedio entre 0,5 y 30 MHz.
-% NOTA: estos límites proceden de la Tabla A.12 de UNE-EN 55032:2016 (puertos de red cableada, Clase B). Si el laboratorio mide con sonda de corriente, los límites equivalentes son 40--30 dBuA (QP) y 30--20 dBuA (AV) entre 0,15 y 0,5 MHz, y 30 dBuA (QP) / 20 dBuA (AV) entre 0,5 y 30 MHz. Ajustar según el método realmente empleado.
-
-\subsubsection*{Resultados}
-
-\begin{figure}[htbp]
-    \centering
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        % \includegraphics[width=\linewidth]{Imagenes/ec_eth_WAN.png}
-        \caption{Puerto WAN.}
-        \label{fig:ec_eth_WAN}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        % \includegraphics[width=\linewidth]{Imagenes/ec_eth_LAN.png}
-        \caption{Puerto LAN.}
-        \label{fig:ec_eth_LAN}
-    \end{subfigure}
-    \caption{Espectros de emisión conducida en modo común (150 kHz -- 30 MHz) en los puertos Ethernet, frente a los límites de Clase B de EN 55032.}
-    \label{fig:ec_eth}
-\end{figure}
-
-% Pendiente: comentario de resultados (frecuencias críticas y márgenes) de los puertos Ethernet.
-
 \subsection{Emisiones Radiadas (EN 55032)}
 \label{subsec:emisiones_radiadas}
 
@@ -280,6 +249,38 @@ Las Figuras \ref{fig:er_horizontal} y \ref{fig:er_vertical} muestran los espectr
 \end{table}
 
 % Pendiente: análisis de resultados (origen probable de las emisiones críticas: relojes del SoM, DDR, PHY Ethernet, armónicos de la PSU radiados a través del cableado de red, etc.).
+
+
+\subsection{Emisiones Conducidas en los Puertos de Comunicaciones (EN 55032)}
+\label{subsec:emisiones_conducidas_eth}
+
+\subsubsection*{Descripción del ensayo}
+
+La especificación del cliente exige además medir las emisiones conducidas en los puertos Ethernet (WAN y LAN), también con límites de Clase B. En este caso se mide la perturbación en modo común (asimétrica) que el equipo inyecta en el cable de red, que actuaría como antena en la instalación real. Para ello se utiliza una red de estabilización de impedancia (\textit{Asymmetric Artificial Network, AAN}) o, alternativamente, una sonda de corriente, en el mismo rango de 150 kHz a 30 MHz. Los límites de Clase B de EN 55032 para puertos de red cableada son, medidos en tensión, de $84$--$74\ \text{dB}\mu\text{V}$ en cuasi-pico y $74$--$64\ \text{dB}\mu\text{V}$ en promedio entre 0,15 y 0,5 MHz, y de $74\ \text{dB}\mu\text{V}$ en cuasi-pico y $64\ \text{dB}\mu\text{V}$ en promedio entre 0,5 y 30 MHz.
+% NOTA: estos límites proceden de la Tabla A.12 de UNE-EN 55032:2016 (puertos de red cableada, Clase B). Si el laboratorio mide con sonda de corriente, los límites equivalentes son 40--30 dBuA (QP) y 30--20 dBuA (AV) entre 0,15 y 0,5 MHz, y 30 dBuA (QP) / 20 dBuA (AV) entre 0,5 y 30 MHz. Ajustar según el método realmente empleado.
+
+\subsubsection*{Resultados}
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        % \includegraphics[width=\linewidth]{Imagenes/ec_eth_WAN.png}
+        \caption{Puerto WAN.}
+        \label{fig:ec_eth_WAN}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        % \includegraphics[width=\linewidth]{Imagenes/ec_eth_LAN.png}
+        \caption{Puerto LAN.}
+        \label{fig:ec_eth_LAN}
+    \end{subfigure}
+    \caption{Espectros de emisión conducida en modo común (150 kHz -- 30 MHz) en los puertos Ethernet, frente a los límites de Clase B de EN 55032.}
+    \label{fig:ec_eth}
+\end{figure}
+
+% Pendiente: comentario de resultados (frecuencias críticas y márgenes) de los puertos Ethernet.
 
 \subsection{Emisión de Corrientes Armónicas (EN 61000-3-2)}
 \label{subsec:emision_armonicos}
@@ -386,7 +387,7 @@ Como complemento a los ensayos normativos, y dado que uno de los objetivos princ
 \subsection{Descripción de los Ensayos}
 \label{subsec:descripcion_aislamiento}
 
-Los ensayos de aislamiento verifican que las barreras de aislamiento galvánico descritas en la Sección \ref{subsec:estrategia_aislamiento} y en la Sección \ref{subsec:requisitos_aislamiento_psu} soportan las solicitaciones de tensión especificadas sin descargas disruptivas (chispas, contorneos o perforaciones). Durante la aplicación de la alta tensión el equipo no se encuentra alimentado ni conectado al ordenador de supervisión, por razones de seguridad, pero debe verificarse su correcto funcionamiento tras el ensayo. Asimismo, el equipo debe envolverse en una lámina metálica conectada a tierra, con aberturas únicamente para los terminales, situada a aproximadamente 1 cm de los terminales de alimentación, corriente, LAN y entradas/salidas digitales, y a unos 3 cm del puerto WAN.
+Los ensayos de aislamiento verifican que las barreras de aislamiento galvánico descritas en la Sección \ref{subsec:estrategia_aislamiento} y en la Sección \ref{subsec:requisitos_aislamiento_psu} soportan los niveles de tensión especificados sin descargas disruptivas (chispas, contorneos o perforaciones). Durante la aplicación de la alta tensión el equipo no se encuentra alimentado ni conectado al ordenador de supervisión, por razones de seguridad, pero debe verificarse su correcto funcionamiento tras el ensayo. Asimismo, el equipo debe envolverse en una lámina metálica conectada a tierra, con aberturas únicamente para los terminales, situada a aproximadamente 1 cm de los terminales de alimentación, corriente, LAN y entradas/salidas digitales, y a unos 3 cm del puerto WAN.
 
 Para estos ensayos, los terminales del equipo se agrupan en tres grupos: puertos Ethernet (WAN y LAN), entradas analógicas de tensión y corriente (terminales de alimentación y de medida de corriente) y entradas/salidas digitales. Al ensayar cada grupo, el resto se unen entre sí y se conectan al retorno del equipo de ensayo de alta tensión (\textit{Hi-pot tester}). Los ensayos realizados son:
 
@@ -394,7 +395,7 @@ Para estos ensayos, los terminales del equipo se agrupan en tres grupos: puertos
     \item \textbf{Resistencia de aislamiento (EN 60255-27):} se aplican $500\ \text{V}_{\text{DC}}$ entre cada grupo y el resto, registrando el valor 5 s después de aplicar la tensión. Debe ser superior a $100\ \text{M}\Omega$ y se mide al principio y al final de la secuencia de ensayos de aislamiento, para detectar una posible degradación.
     \item \textbf{Rigidez dieléctrica (EN 60255-27):} $2\ \text{kV}$ a 50 Hz e impulsos de $\pm 5\ \text{kV}$ ($1,2/50\ \mu\text{s}$, 5 positivos y 5 negativos) en las entradas analógicas y digitales, y $1\ \text{kV}$ a 50 Hz e impulsos de $\pm 2\ \text{kV}$ en los puertos de comunicaciones.
     \item \textbf{Aislamiento del puerto Ethernet WAN (EN 60255-27):} $10\ \text{kV}$ a 50 Hz e impulsos de $\pm 20\ \text{kV}$ (15 positivos y 15 negativos) entre el puerto WAN y el resto de terminales agrupados. Este requisito, especialmente severo, se debe a que el puerto WAN puede interconectarse con equipos situados en el entorno de media tensión del CT.
-    \item \textbf{Rigidez dieléctrica de la alimentación (EN 62368-1):} para la categoría de sobretensión IV (OVC IV), $5,7\ \text{kV}_{\text{AC}}$ durante 60 s e impulsos de $8\ \text{kV}$ de pico entre el lado primario (terminales de alimentación y de corriente) y el lado secundario (Ethernet y entradas/salidas digitales).
+    \item \textbf{Rigidez dieléctrica de la alimentación (EN 62368-1):} para la categoría de sobretensión IV (OVC IV), $5-7\ \text{kV}_{\text{AC}}$ durante 60 s e impulsos de $8\ \text{kV}$ de pico entre el lado primario (terminales de alimentación y de corriente) y el lado secundario (Ethernet y entradas/salidas digitales).
 \end{itemize}
 % NOTA: revisar la justificación del ensayo de 10 kV / 20 kV en el puerto WAN (grupos LV/MV de la especificación del cliente) antes de la versión final.
 
@@ -461,7 +462,7 @@ Los ensayos de inmunidad verifican que el equipo sigue funcionando correctamente
     \item \textbf{Transitorios rápidos en ráfagas (EN 61000-4-4):} se inyectan ráfagas de impulsos de nanosegundos en la alimentación y en las líneas de señal. Simula los transitorios originados por la apertura de cargas inductivas (relés, contactores) y por los rebotes de sus contactos.
     \item \textbf{Ondas de choque (EN 61000-4-5):} se aplican impulsos de alta energía ($1,2/50\ \mu\text{s}$) en modo diferencial y en modo común. Simula las sobretensiones inducidas por descargas atmosféricas en las líneas aéreas y por maniobras en la red de distribución. Como se indicó en la Sección \ref{subsec:requisitos_emc_psu}, se aplican niveles superiores a los mínimos normativos ($\pm 6\ \text{kV}$ en alimentación y $\pm 4\ \text{kV}$ en comunicaciones).
     \item \textbf{Perturbaciones conducidas inducidas por campos de RF (EN 61000-4-6):} se inyecta una tensión de RF modulada entre 150 kHz y 80 MHz en los cables del equipo. Simula las corrientes de RF que los transmisores cercanos inducen en los cables, que actúan como antenas a frecuencias en las que el equipo es demasiado pequeño para captar directamente el campo radiado.
-    \item \textbf{Campo magnético a frecuencia industrial (EN 61000-4-8):} el equipo se somete en sus tres ejes a un campo magnético de 50 Hz, continuo y de corta duración. Simula el campo generado por el transformador MT/BT y los embarrados del CT, por los que circulan corrientes elevadas, así como las corrientes de falta de corta duración. Es un ensayo especialmente relevante para la metrología, ya que el campo puede acoplarse en los circuitos de medida de corriente.
+    \item \textbf{Campo magnético a frecuencia industrial (EN 61000-4-8):} el equipo se somete en sus tres ejes a un campo magnético de 50 Hz, continuo y de corta duración. Simula el campo generado por el transformador MT/BT y los devanados (o barras) del CT, por los que circulan corrientes elevadas, así como las corrientes de falta de corta duración. Es un ensayo especialmente relevante para la metrología, ya que el campo puede acoplarse en los circuitos de medida de corriente.
     \item \textbf{Campo magnético oscilatorio amortiguado (EN 61000-4-10):} se aplica un campo magnético oscilatorio amortiguado de 0,1 a 1 MHz. Simula los campos generados por la maniobra de seccionadores en subestaciones y CT.
     \item \textbf{Armónicos de tensión de baja frecuencia (EN 61000-4-13):} se superponen armónicos e interarmónicos a la tensión de alimentación. Simula la distorsión de la tensión de red provocada por la creciente presencia de cargas no lineales (fuentes conmutadas, inversores, cargadores de vehículo eléctrico).
     \item \textbf{Onda oscilatoria amortiguada (EN 61000-4-18):} se aplican ondas oscilatorias amortiguadas en modo común y diferencial. Simula los transitorios oscilatorios que aparecen en los circuitos de baja tensión de subestaciones y CT al maniobrar los aparatos de corte de media y alta tensión.
@@ -470,7 +471,7 @@ Los ensayos de inmunidad verifican que el equipo sigue funcionando correctamente
 \section{Ensayos Mecánicos}
 \label{sec:ensayos_mecanicos}
 
-Los ensayos mecánicos verifican que el equipo resiste las solicitaciones del transporte, la manipulación y la instalación, y se evalúan comprobando que el equipo funciona correctamente y no presenta daños visibles tras el ensayo:
+Los ensayos mecánicos verifican que el equipo resiste las adversidades del transporte, la manipulación y la instalación, y se evalúan comprobando que el equipo funciona correctamente y no presenta daños visibles tras el ensayo:
 
 \begin{itemize}
     \item \textbf{Grado de protección IP (EN 60529):} verifica que la envolvente impide el acceso a partes peligrosas y la entrada de cuerpos sólidos y agua según el grado IP exigido.
