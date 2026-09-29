@@ -1,4 +1,4 @@
-\chapter{Resultados de Precertificación}
+\chapter{Validación Experimental y Resultados de Precertificación}
 \label{ch:precompliance_results}
 
 Una vez descrito el diseño hardware del DCU (Capítulo \ref{ch:hardware_design}) y de su fuente de alimentación HV/HF (Capítulo \ref{HV_HF_PSU}), el siguiente paso consiste en verificar que el prototipo es capaz de superar la batería de ensayos tipo (\textit{Type Tests}) exigida para su homologación. Antes de acudir a la homologación definitiva en un laboratorio acreditado, se ha llevado a cabo una campaña de \textbf{precertificación} (\textit{pre-compliance}) en un centro de ensayos externo, con el objetivo de detectar de forma temprana posibles incumplimientos (especialmente en materia de EMC) y poder corregirlos en una fase del diseño en la que todavía resulta viable modificar el hardware sin un impacto elevado en coste y plazos.
@@ -25,13 +25,151 @@ Seguridad eléctrica & EN 62368-1 & Pasa / no pasa \\ \hline
 \label{tab:familias_ensayos}
 \end{table}
 
-\section{Metodología y Configuración de los Ensayos}
+\section{Estudio de Sensibilidad de la Comunicación PLC}
+\label{sec:sensibilidad_plc}
+
+Los ensayos normativos que se presentan en el resto de este capítulo verifican que el equipo no supera los límites de emisión establecidos y que tolera las perturbaciones externas, pero no cuantifican directamente la calidad de la comunicación PLC ni el efecto que tiene sobre ella el ruido generado por el propio equipo. Por este motivo, y como complemento a la campaña de precertificación, se ha diseñado un \textbf{estudio de sensibilidad de la comunicación PLC}, realizado en los laboratorios propios de la empresa. Su objetivo es determinar cuánta atenuación admite el canal PLC antes de que la comunicación comience a degradarse, comparando el comportamiento del DCU con el de equipos de referencia.
+
+Este estudio constituye la validación experimental más directa de la hipótesis central del trabajo: colocar la frecuencia de conmutación de la fuente de alimentación por encima de las bandas PLC (Secciones \ref{subsec:topologias_alta_frecuencia_tension} y \ref{subsec:requisitos_emc_psu}) mejora de forma cuantificable la calidad de la comunicación frente a equipos cuya fuente conmuta dentro de dichas bandas.
+
+Además de la sensibilidad del enlace, el estudio persigue caracterizar la \textbf{coexistencia entre la fuente conmutada y la comunicación PLC} dentro del propio equipo: es decir, cuantificar en qué medida el ruido que genera la fuente de alimentación (y el resto de la electrónica) en la banda PLC se acopla al receptor del propio módem y reduce el margen de enlace disponible. Dado que el DCU y su módem comparten los mismos terminales de red, este ruido llega al receptor sin ninguna atenuación, a diferencia de la señal procedente del extremo remoto, por lo que su efecto se hace más evidente cuanto mayor es la atenuación del canal.
+
+\subsection{Montaje Experimental}
+\label{subsec:montaje_sensibilidad}
+
+El montaje, representado en la Figura \ref{fig:montaje_sensibilidad_plc}, se basa en dos redes de estabilización de impedancia de línea (\textit{Line Impedance Stabilization Network, LISN}). Cada lado del montaje se alimenta de la red a través de su propia LISN, que presenta al equipo una impedancia de red definida y repetible y filtra el ruido procedente de la red del laboratorio. De esta forma, a las frecuencias de la señal PLC, ambos lados quedan aislados entre sí y respecto a la instalación del laboratorio. Las salidas de RF de las dos LISN se interconectan a través de un \textbf{atenuador variable} de 50 $\Omega$, que pasa a ser el único camino de acoplamiento de la señal PLC entre ambos lados. Esto permite emular de forma controlada la atenuación que sufriría la señal en una red de baja tensión real.
+
+\begin{itemize}
+    \item \textbf{Lado A:} se conecta un equipo de comunicación PLC ya validado, una placa de evaluación \textbf{PL460-EK} de Microchip, que actúa como extremo remoto del enlace.
+    \item \textbf{Lado B:} se conectan el equipo bajo ensayo (\textit{Equipment Under Test, EUT}) y una segunda placa PL460-EK que actúa como receptor de referencia. Al compartir la misma LISN, ambos equipos están sometidos exactamente a las mismas condiciones de canal (atenuación, impedancia y ruido), lo que permite comparar directamente sus prestaciones.
+\end{itemize}
+
+Dado que el DCU integra el mismo módem PL460 que la placa de evaluación (Sección \ref{subsec:afe_driver}), las diferencias que se observen entre ambos no pueden atribuirse al propio módem, sino a la implementación del equipo: el ruido generado por su fuente de alimentación y su electrónica digital, el circuito de acoplamiento a la red y el diseño de la PCB.
+% NOTA: comprobar que las LISN empleadas son válidas por debajo de 150 kHz (p. ej. redes en V de 50 uH + 5 ohm, definidas a partir de 9 kHz en CISPR 16-1-2); una LISN de 50 uH / 50 ohm pensada solo para 150 kHz - 30 MHz presenta una impedancia menor en la banda CENELEC-A y el condensador de acoplamiento de su salida de RF puede introducir atenuación adicional. Medir también la pérdida de inserción del camino LISN-LISN con el atenuador a 0 dB, para sumarla a la atenuación nominal del atenuador.
+% NOTA: indicar fase de inyección, canal PRIME (canal 1, CENELEC-A) y versión de firmware / herramienta de test usada en las PL460-EK.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Imagenes/montaje_sensibilidad_plc.pdf}
+    \caption{Esquema del montaje del estudio de sensibilidad PLC: dos LISN con sus salidas de RF interconectadas a través de un atenuador variable, con la PL460-EK remota en el lado A y el EUT junto a la PL460-EK de referencia en el lado B.}
+    \label{fig:montaje_sensibilidad_plc}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{Imagenes/foto_montaje_sensibilidad_plc.jpg}
+    \caption{Montaje del estudio de sensibilidad PLC en el laboratorio.}
+    \label{fig:foto_montaje_sensibilidad_plc}
+\end{figure}
+
+\subsection{Configuraciones Evaluadas}
+\label{subsec:configuraciones_sensibilidad}
+
+Para aislar la contribución de cada elemento, el estudio se repite en las configuraciones recogidas en la Tabla \ref{tab:configuraciones_sensibilidad}. En todas ellas el extremo remoto del lado A es la misma PL460-EK.
+
+\begin{table}[!h]
+\centering
+\small
+\begin{tabular}{|p{3.2cm}|p{5.4cm}|p{5.6cm}|}
+\hline
+\textbf{Configuración} & \textbf{Equipos en el lado B} & \textbf{Finalidad} \\ \hline
+C1: Referencia & PL460-EK de referencia, con el EUT desconectado & Sensibilidad del módem sin la influencia de otros equipos (línea base). \\ \hline
+C2: Referencia junto al EUT & PL460-EK de referencia, con el EUT alimentado pero sin transmitir & Efecto del ruido del EUT sobre un equipo vecino conectado a la misma red. \\ \hline
+C3: EUT & DCU desarrollado en este trabajo (fuente conmutando por encima de 500 kHz) & Calidad de transmisión y recepción del propio DCU frente a la referencia. \\ \hline
+C4: Equipo con fuente comercial & Equipo PLC alimentado con una fuente comercial que conmuta dentro de la banda PLC & Mejora aportada por una fuente que conmuta fuera de las bandas PLC. \\ \hline
+\end{tabular}
+\caption{Configuraciones evaluadas en el estudio de sensibilidad PLC.}
+\label{tab:configuraciones_sensibilidad}
+\end{table}
+% NOTA: C2 es opcional; eliminarla si finalmente no se realiza. Describir el equipo de C4 (sin nombrar al fabricante si no procede) y su frecuencia de conmutación.
+
+\subsection{Procedimiento y Métricas Evaluadas}
+\label{subsec:procedimiento_sensibilidad}
+
+Partiendo de una atenuación nula, la atenuación del canal se incrementa en escalones (más finos en las proximidades del umbral de pérdida de tramas). En cada escalón se transmite un número fijo de tramas, de longitud y esquema de modulación constantes, y se registran las métricas que proporciona el propio módem receptor. La medida se realiza en ambos sentidos del enlace, ya que evalúan aspectos distintos del equipo:
+
+\begin{itemize}
+    \item \textbf{Transmisión (lado B $\rightarrow$ lado A):} evalúa la calidad de la señal inyectada por el equipo en la red, que depende de su nivel de salida, de su circuito de acoplamiento y de la impedancia que presenta el propio equipo en la banda PLC.
+    \item \textbf{Recepción (lado A $\rightarrow$ lado B):} evalúa la sensibilidad del receptor, que es la más afectada por el ruido que el propio equipo genera en la banda PLC y que se suma a la señal atenuada que llega desde el extremo remoto.
+\end{itemize}
+
+El procedimiento se repite para los distintos esquemas de modulación de PRIME (DBPSK, DQPSK y D8PSK, con y sin FEC), ya que cada uno requiere una SNR mínima distinta para decodificarse correctamente.
+% NOTA: confirmar las modulaciones realmente ensayadas (y los modos robustos si se usa PRIME 1.4), el número de tramas por escalón, su longitud y el tamaño del escalón de atenuación.
+
+En cada escalón se registran las siguientes métricas:
+
+\begin{itemize}
+    \item \textbf{Indicador de intensidad de señal recibida (\textit{Received Signal Strength Indicator, RSSI}):} nivel de señal medido en el receptor. En condiciones ideales disminuye linealmente con la atenuación introducida; cuando la señal se aproxima al ruido de fondo, el RSSI deja de disminuir y se estabiliza en el nivel de ruido presente en la banda, lo que permite estimar el ruido que aporta cada configuración.
+    \item \textbf{SNR:} relación señal a ruido estimada por el propio módem sobre las tramas recibidas. Es la métrica que determina directamente qué esquemas de modulación puede utilizar el enlace.
+    \item \textbf{Tasa de error de trama (\textit{Frame Error Rate, FER}):} porcentaje de tramas enviadas que no se reciben correctamente, $\text{FER} = \left(1 - N_{rx}/N_{tx}\right) \cdot 100\%$.
+\end{itemize}
+
+A partir de estas medidas se definen dos puntos característicos para cada configuración: la \textbf{atenuación máxima sin pérdida de tramas} ($A_{0}$, última atenuación con $\text{FER} = 0\%$) y la \textbf{atenuación de pérdida total del enlace} ($A_{100}$, primera atenuación con $\text{FER} = 100\%$). La diferencia de $A_{0}$ entre dos configuraciones expresa, en decibelios, el margen adicional de enlace que aporta una sobre la otra, directamente trasladable a la atenuación adicional (longitud de línea, número de derivaciones o cargas conectadas) que el enlace puede tolerar en una red real.
+% NOTA: si se prefiere, definir el umbral con un FER distinto de 0 % (p. ej. 1 % o 10 %).
+
+\subsection{Resultados}
+\label{subsec:resultados_sensibilidad}
+
+Las Figuras \ref{fig:fer_vs_atenuacion}, \ref{fig:rssi_vs_atenuacion} y \ref{fig:snr_vs_atenuacion} muestran la evolución de las métricas con la atenuación del canal para cada configuración, y la Tabla \ref{tab:resultados_sensibilidad} resume los puntos característicos obtenidos.
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{Imagenes/fer_vs_atenuacion.pdf}
+    \caption{Tasa de error de trama (FER) en función de la atenuación del canal para cada configuración.}
+    \label{fig:fer_vs_atenuacion}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{Imagenes/rssi_vs_atenuacion.pdf}
+    \caption{RSSI en función de la atenuación del canal para cada configuración.}
+    \label{fig:rssi_vs_atenuacion}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{Imagenes/snr_vs_atenuacion.pdf}
+    \caption{SNR en función de la atenuación del canal para cada configuración.}
+    \label{fig:snr_vs_atenuacion}
+\end{figure}
+
+\begin{table}[!h]
+\centering
+\small
+\begin{tabular}{|p{3.4cm}|p{1.9cm}|p{1.6cm}|p{1.6cm}|p{2.2cm}|p{2.0cm}|}
+\hline
+\textbf{Configuración} & \textbf{Sentido} & \textbf{$A_{0}$ (dB)} & \textbf{$A_{100}$ (dB)} & \textbf{RSSI en $A_{0}$ (dB$\mu$V)} & \textbf{SNR en $A_{0}$ (dB)} \\ \hline
+\multirow{2}{3.4cm}{C1: Referencia} & TX & -- & -- & -- & -- \\ \cline{2-6}
+ & RX & -- & -- & -- & -- \\ \hline
+\multirow{2}{3.4cm}{C2: Referencia junto al EUT} & TX & -- & -- & -- & -- \\ \cline{2-6}
+ & RX & -- & -- & -- & -- \\ \hline
+\multirow{2}{3.4cm}{C3: EUT} & TX & -- & -- & -- & -- \\ \cline{2-6}
+ & RX & -- & -- & -- & -- \\ \hline
+\multirow{2}{3.4cm}{C4: Fuente comercial} & TX & -- & -- & -- & -- \\ \cline{2-6}
+ & RX & -- & -- & -- & -- \\ \hline
+\end{tabular}
+\caption{Puntos característicos del estudio de sensibilidad PLC para cada configuración y sentido del enlace.}
+\label{tab:resultados_sensibilidad}
+\end{table}
+
+Para relacionar estas diferencias de sensibilidad con su origen, se mide además con el analizador de espectro el ruido de fondo presente en la banda CENELEC-A en la salida de RF de la LISN del lado B, con la transmisión PLC desactivada, de forma que la medida recoge exclusivamente la contribución de la fuente de alimentación y del resto de la electrónica del equipo. La Figura \ref{fig:ruido_banda_eut_vs_comercial} compara este ruido para el EUT (C3) y para el equipo con fuente comercial (C4). La diferencia entre el nivel de la señal PLC transmitida (Figura \ref{fig:espectro_tx_plc}) y este ruido de fondo representa la relación señal a ruido disponible en bornes del propio equipo, y permite verificar experimentalmente que situar la frecuencia de conmutación de la fuente por encima de 500 kHz evita que esta degrade la recepción PLC, mientras que una fuente que conmuta dentro de la banda eleva el ruido de fondo y reduce directamente el margen de enlace.
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{Imagenes/ruido_banda_eut_vs_comercial.png}
+    \caption{Ruido de fondo en la banda CENELEC-A con la transmisión PLC desactivada: EUT (fuente conmutando por encima de 500 kHz) frente al equipo con fuente comercial conmutando dentro de la banda.}
+    \label{fig:ruido_banda_eut_vs_comercial}
+\end{figure}
+
+% Pendiente: análisis de resultados, relacionando el ruido de fondo de cada configuración con el RSSI de saturación y con A_0 (diferencia de A_0 entre C3 y C1 -> penalización del diseño frente a la referencia; entre C3 y C4 -> mejora aportada por la fuente fuera de banda; entre C2 y C1 -> ruido que el EUT inyecta a equipos vecinos).
+
+\section{Metodología y Configuración de los Ensayos de Precertificación}
 \label{sec:metodologia_ensayos}
 
 \subsection{Equipo Bajo Ensayo y Montaje General}
 \label{subsec:eut_montaje}
 
-El equipo bajo ensayo (\textit{Equipment Under Test, EUT}) es el prototipo del DCU descrito en los capítulos anteriores, con unas dimensiones aproximadas de $200 \times 120 \times 75$ mm y un peso estimado de medio kilogramo. Un requisito fundamental de la especificación del cliente es que \textbf{todos los ensayos de una misma familia se realicen sobre el mismo prototipo}, identificando debidamente tanto la versión de hardware como la de software, de forma que los resultados no puedan atribuirse a diferencias entre unidades.
+El EUT es el prototipo del DCU descrito en los capítulos anteriores, con unas dimensiones aproximadas de $200 \times 120 \times 75$ mm y un peso estimado de medio kilogramo. Un requisito fundamental de la especificación del cliente es que \textbf{todos los ensayos de una misma familia se realicen sobre el mismo prototipo}, identificando debidamente tanto la versión de hardware como la de software, de forma que los resultados no puedan atribuirse a diferencias entre unidades.
 
 Durante los ensayos, el EUT se alimenta desde la red trifásica ($L1/L2/L3/N$, denominadas $R/S/T/N$ en los informes del laboratorio) y todos sus puertos se mantienen conectados y estimulados de forma representativa de su operación real en un CT:
 
@@ -76,7 +214,7 @@ Estos ensayos cuantifican el ruido electromagnético que el propio equipo genera
 
 \subsubsection*{Descripción del ensayo}
 
-El ensayo mide la tensión de perturbación que el equipo inyecta en la red de alimentación en el rango de 150 kHz a 30 MHz. El EUT se conecta a la red a través de una red artificial de alimentación (\textit{Artificial Mains Network, AMN}), que presenta una impedancia normalizada entre cada conductor y el plano de tierra de referencia, desacopla el ruido procedente de la red del laboratorio y permite extraer la tensión de perturbación hacia el receptor de medida. El ensayo se realiza con conexión trifásica, midiendo por separado cada uno de los cuatro conductores ($L1$, $L2$, $L3$ y $N$).
+El ensayo mide la tensión de perturbación que el equipo inyecta en la red de alimentación en el rango de 150 kHz a 30 MHz. El EUT se conecta a la red a través de una LISN (denominada red artificial de alimentación, \textit{Artificial Mains Network}, en la terminología de EN 55032), que presenta una impedancia normalizada entre cada conductor y el plano de tierra de referencia, desacopla el ruido procedente de la red del laboratorio y permite extraer la tensión de perturbación hacia el receptor de medida. El ensayo se realiza con conexión trifásica, midiendo por separado cada uno de los cuatro conductores ($L1$, $L2$, $L3$ y $N$).
 
 La medida se realiza en dos pasos: en primer lugar, un barrido rápido con detector de pico y retención de máximos (\textit{max-hold}) permite identificar las frecuencias críticas; a continuación, sobre dichas frecuencias se realiza la medida final con los detectores de cuasi-pico (QP) y promedio (AV), con un ancho de banda de resolución de 9 kHz, que son los que se comparan con los límites de la Tabla \ref{tab:requisitos_emc_emisiones}.
 
@@ -367,19 +505,6 @@ Además de las emisiones no intencionadas analizadas en la Sección \ref{sec:ens
 \end{figure}
 
 % Pendiente: nivel de salida medido en banda, margen frente al límite y comentario de las emisiones fuera de banda.
-
-\subsection{Coexistencia entre la Fuente Conmutada y la Comunicación PLC}
-\label{subsec:coexistencia_psu_plc}
-
-% OPCIONAL: incluir esta subsección solo si se dispone de una captura del ruido de fondo en banda CENELEC-A con la transmisión PLC desactivada.
-Como complemento a los ensayos normativos, y dado que uno de los objetivos principales de este trabajo es analizar la coexistencia entre la fuente conmutada y la comunicación PLC, resulta de interés comparar el ruido de fondo presente en la banda CENELEC-A con la transmisión PLC desactivada (contribución exclusiva de la fuente y de la electrónica del propio equipo) con el espectro de la señal PLC transmitida (Figura \ref{fig:espectro_tx_plc}). La diferencia entre ambos niveles representa la relación señal a ruido disponible en bornes del propio equipo, y permite verificar experimentalmente que situar la frecuencia de conmutación de la fuente por encima de 500 kHz evita que esta degrade la recepción PLC.
-
-\begin{figure}[htbp]
-    \centering
-    % \includegraphics[width=0.8\textwidth]{Imagenes/ruido_fondo_cenelec_a.png}
-    \caption{Ruido de fondo en la banda CENELEC-A con la transmisión PLC desactivada y la fuente de alimentación a plena carga.}
-    \label{fig:ruido_fondo_cenelec_a}
-\end{figure}
 
 \section{Ensayos de Aislamiento}
 \label{sec:ensayos_aislamiento}
