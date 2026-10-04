@@ -89,9 +89,11 @@ C4: Equipo con fuente comercial & Equipo PLC alimentado con una fuente comercial
 Partiendo de una atenuación nula, la atenuación del canal se incrementa en escalones (más finos en las proximidades del umbral de pérdida de tramas). En cada escalón se transmite un número fijo de tramas, de longitud y esquema de modulación constantes, y se registran las métricas que proporciona el propio módem receptor. La medida se realiza en ambos sentidos del enlace, ya que evalúan aspectos distintos del equipo:
 
 \begin{itemize}
-    \item \textbf{Transmisión (lado B $\rightarrow$ lado A):} evalúa la calidad de la señal inyectada por el equipo en la red, que depende de su nivel de salida, de su circuito de acoplamiento y de la impedancia que presenta el propio equipo en la banda PLC.
-    \item \textbf{Recepción (lado A $\rightarrow$ lado B):} evalúa la sensibilidad del receptor, que es la más afectada por el ruido que el propio equipo genera en la banda PLC y que se suma a la señal atenuada que llega desde el extremo remoto.
+    \item \textbf{Transmisión:} evalúa la calidad de la señal inyectada por el equipo en la red, que depende de su nivel de salida, de su circuito de acoplamiento y de la impedancia que presenta el propio equipo en la banda PLC.
+    \item \textbf{Recepción:} evalúa la sensibilidad del receptor, que es la más afectada por el ruido que el propio equipo genera en la banda PLC y que se suma a la señal atenuada que llega desde el extremo remoto.
 \end{itemize}
+
+En la práctica, el transmisor debe ``atacar'' una impedancia de $2\Omega$ la cual simula la impedancia del canal, por ello, al momento de probar la transmisión del dispositivo (\textit{EUT}), se deberá intercambiar hacia el lado de transmisión, debido a que actualmente solo se posee una única LISN de $2\Omega$. 
 
 El procedimiento se repite para los distintos esquemas de modulación de PRIME (DBPSK, DQPSK y D8PSK, con y sin FEC), ya que cada uno requiere una SNR mínima distinta para decodificarse correctamente.
 % NOTA: confirmar las modulaciones realmente ensayadas (y los modos robustos si se usa PRIME 1.4), el número de tramas por escalón, su longitud y el tamaño del escalón de atenuación.
@@ -220,7 +222,7 @@ La medida se realiza en dos pasos: en primer lugar, un barrido rápido con detec
 
 \begin{figure}[htbp]
     \centering
-    % \includegraphics[width=0.8\textwidth]{Imagenes/setup_emisiones_conducidas.png}
+    \includegraphics[width=0.5\textwidth]{Imagenes/setup_emisiones_conducidas.jpg}
     \caption{Montaje del ensayo de emisiones conducidas en los terminales de alimentación AC según EN 55032.}
     \label{fig:setup_emisiones_conducidas}
 \end{figure}
@@ -233,14 +235,14 @@ La Figura \ref{fig:ec_ac} muestra los espectros de emisión conducida obtenidos 
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        % \includegraphics[width=\linewidth]{Imagenes/ec_ac_L1.png}
+        \includegraphics[width=\linewidth]{Imagenes/ec_ac_R.png}
         \caption{Fase $L1$ ($R$).}
         \label{fig:ec_ac_L1}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        % \includegraphics[width=\linewidth]{Imagenes/ec_ac_L2.png}
+        \includegraphics[width=\linewidth]{Imagenes/ec_ac_S.png}
         \caption{Fase $L2$ ($S$).}
         \label{fig:ec_ac_L2}
     \end{subfigure}
@@ -248,14 +250,14 @@ La Figura \ref{fig:ec_ac} muestra los espectros de emisión conducida obtenidos 
     \vspace{0.4cm}
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        % \includegraphics[width=\linewidth]{Imagenes/ec_ac_L3.png}
+        \includegraphics[width=\linewidth]{Imagenes/ec_ac_T.png}
         \caption{Fase $L3$ ($T$).}
         \label{fig:ec_ac_L3}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        % \includegraphics[width=\linewidth]{Imagenes/ec_ac_N.png}
+        \includegraphics[width=\linewidth]{Imagenes/ec_ac_N.png}
         \caption{Neutro ($N$).}
         \label{fig:ec_ac_N}
     \end{subfigure}
@@ -295,7 +297,7 @@ Cabe señalar que EN 55032 establece la frecuencia máxima de medida en función
 
 \begin{figure}[htbp]
     \centering
-    % \includegraphics[width=0.8\textwidth]{Imagenes/setup_emisiones_radiadas.png}
+    \includegraphics[width=0.8\textwidth]{Imagenes/setup_emisiones_radiadas.jpg}
     \caption{Montaje del ensayo de emisiones radiadas en cámara semianecoica según EN 55032.}
     \label{fig:setup_emisiones_radiadas}
 \end{figure}
@@ -308,14 +310,14 @@ Las Figuras \ref{fig:er_horizontal} y \ref{fig:er_vertical} muestran los espectr
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        % \includegraphics[width=\linewidth]{Imagenes/er_H_0.png}
+        \includegraphics[width=\linewidth]{Imagenes/er_H_0.png}
         \caption{Orientación 0°.}
         \label{fig:er_H_0}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        % \includegraphics[width=\linewidth]{Imagenes/er_H_90.png}
+        \includegraphics[width=\linewidth]{Imagenes/er_H_90.png}
         \caption{Orientación 90°.}
         \label{fig:er_H_90}
     \end{subfigure}
@@ -323,14 +325,14 @@ Las Figuras \ref{fig:er_horizontal} y \ref{fig:er_vertical} muestran los espectr
     \vspace{0.4cm}
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        % \includegraphics[width=\linewidth]{Imagenes/er_H_180.png}
+        \includegraphics[width=\linewidth]{Imagenes/er_H_180.png}
         \caption{Orientación 180°.}
         \label{fig:er_H_180}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        % \includegraphics[width=\linewidth]{Imagenes/er_H_270.png}
+        \includegraphics[width=\linewidth]{Imagenes/er_H_270.png}
         \caption{Orientación 270°.}
         \label{fig:er_H_270}
     \end{subfigure}
@@ -342,14 +344,14 @@ Las Figuras \ref{fig:er_horizontal} y \ref{fig:er_vertical} muestran los espectr
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        % \includegraphics[width=\linewidth]{Imagenes/er_V_0.png}
+        \includegraphics[width=\linewidth]{Imagenes/er_V_0.png}
         \caption{Orientación 0°.}
         \label{fig:er_V_0}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        % \includegraphics[width=\linewidth]{Imagenes/er_V_90.png}
+        \includegraphics[width=\linewidth]{Imagenes/er_V_90.png}
         \caption{Orientación 90°.}
         \label{fig:er_V_90}
     \end{subfigure}
@@ -357,18 +359,19 @@ Las Figuras \ref{fig:er_horizontal} y \ref{fig:er_vertical} muestran los espectr
     \vspace{0.4cm}
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        % \includegraphics[width=\linewidth]{Imagenes/er_V_180.png}
+        \includegraphics[width=\linewidth]{Imagenes/er_V_180.png}
         \caption{Orientación 180°.}
         \label{fig:er_V_180}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        % \includegraphics[width=\linewidth]{Imagenes/er_V_270.png}
+        \includegraphics[width=\linewidth]{Imagenes/er_V_270.png}
         \caption{Orientación 270°.}
         \label{fig:er_V_270}
     \end{subfigure}
     \caption{Espectros de emisión radiada (30 MHz -- 1 GHz) con la antena en polarización vertical, frente a los límites de Clase B de EN 55032.}
+    %NOTA IMPORTANTE: Pedir a Miguel los resultados donde si se aprueba, ya que en estas imágenes se ve que se superan los límites de emisión radiada.
     \label{fig:er_vertical}
 \end{figure}
 
