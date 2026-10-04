@@ -1,0 +1,49 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="q8MTglcvGVvyKcgPUXwr">
+    <mxGraphModel dx="1231" dy="716" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="pY8pIpDFHR-GSYYUQGIZ-9" edge="1" parent="1" source="pY8pIpDFHR-GSYYUQGIZ-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=PT Serif;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DPT%2BSerif;strokeWidth=2;" target="pY8pIpDFHR-GSYYUQGIZ-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pY8pIpDFHR-GSYYUQGIZ-1" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fontFamily=PT Serif;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DPT%2BSerif;strokeWidth=1;fontStyle=1" value="Inicio" vertex="1">
+          <mxGeometry height="70" width="105" x="51" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="pY8pIpDFHR-GSYYUQGIZ-4" edge="1" parent="1" source="pY8pIpDFHR-GSYYUQGIZ-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=PT Serif;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DPT%2BSerif;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;" target="pY8pIpDFHR-GSYYUQGIZ-3" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pY8pIpDFHR-GSYYUQGIZ-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fontFamily=PT Serif;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DPT%2BSerif;strokeWidth=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;Paso 1:&lt;/b&gt;&lt;div&gt;Magnitudes&lt;/div&gt;&lt;div&gt;(Ganancias RMS)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="120" x="200" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="pY8pIpDFHR-GSYYUQGIZ-6" edge="1" parent="1" source="pY8pIpDFHR-GSYYUQGIZ-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=PT Serif;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DPT%2BSerif;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;" target="pY8pIpDFHR-GSYYUQGIZ-5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pY8pIpDFHR-GSYYUQGIZ-3" parent="1" style="whiteSpace=wrap;html=1;rounded=1;roundedPerimeter=1;fontFamily=PT Serif;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DPT%2BSerif;strokeWidth=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;Paso2:&lt;/b&gt;&lt;div&gt;Fase V - I&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="120" x="364" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="pY8pIpDFHR-GSYYUQGIZ-8" edge="1" parent="1" source="pY8pIpDFHR-GSYYUQGIZ-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=PT Serif;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DPT%2BSerif;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;" target="pY8pIpDFHR-GSYYUQGIZ-7" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pY8pIpDFHR-GSYYUQGIZ-5" parent="1" style="whiteSpace=wrap;html=1;rounded=1;roundedPerimeter=1;fontFamily=PT Serif;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DPT%2BSerif;strokeWidth=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;Paso 3:&lt;/b&gt;&lt;div&gt;Fase V - V&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="120" x="528" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="pY8pIpDFHR-GSYYUQGIZ-11" edge="1" parent="1" source="pY8pIpDFHR-GSYYUQGIZ-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=PT Serif;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DPT%2BSerif;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;" target="pY8pIpDFHR-GSYYUQGIZ-10" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pY8pIpDFHR-GSYYUQGIZ-7" parent="1" style="whiteSpace=wrap;html=1;rounded=1;roundedPerimeter=1;fontFamily=PT Serif;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DPT%2BSerif;strokeWidth=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;Paso 4:&lt;/b&gt;&lt;div&gt;Offset de Potencia&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="120" x="692" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="pY8pIpDFHR-GSYYUQGIZ-15" edge="1" parent="1" source="pY8pIpDFHR-GSYYUQGIZ-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=PT Serif;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DPT%2BSerif;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;" target="pY8pIpDFHR-GSYYUQGIZ-14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pY8pIpDFHR-GSYYUQGIZ-10" parent="1" style="whiteSpace=wrap;html=1;rounded=1;roundedPerimeter=1;fontFamily=PT Serif;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DPT%2BSerif;strokeWidth=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Validación, almacenamiento de constantes y bloqueo" vertex="1">
+          <mxGeometry height="80" width="114" x="856" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="pY8pIpDFHR-GSYYUQGIZ-14" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fontFamily=PT Serif;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DPT%2BSerif;strokeWidth=1;fontStyle=1" value="Fin" vertex="1">
+          <mxGeometry height="70" width="105" x="1014" y="225" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
