@@ -1,4 +1,4 @@
-\chapter{Diseño Hardware y Diagrama de Bloques Completo}
+\chapter{Diseño \textit{Hardware} y Diagrama de Bloques Completo}
 \label{ch:hardware_design}
 
 \section{Arquitectura General y Esquema de Aislamientos Galvánicos}
@@ -6,7 +6,7 @@
 
 El DCU de nueva generación desarrollado en este Trabajo de Fin de Máster ha sido concebido como un nodo de procesamiento embebido de alta densidad, capaz de integrar en un único módulo compacto de carril DIN las funciones de telegestión de red por línea eléctrica (NB-PLC), metrología trifásica de precisión de Clase 0.5, comunicaciones ascendentes (WAN) y puertos de expansión inalámbricos.
 
-La instalación del equipo en el entorno de un CT de MT/BT exige un diseño de hardware altamente robusto frente a sobretensiones de Categoría IV y transitorios rápidos (\textit{bursts}/ESD). Por este motivo, el concepto de diseño pivota sobre una estricta \textbf{segmentación por dominios de masa y barreras de aislamiento galvánico}, tal y como se ilustra en la arquitectura global de la Figura \ref{fig:diagrama_bloques_global}.
+La instalación del equipo en el entorno de un CT de MT/BT exige un diseño de \textit{hardware} altamente robusto frente a sobretensiones de Categoría IV y transitorios rápidos (\textit{bursts}/ESD). Por este motivo, el concepto de diseño pivota sobre una estricta \textbf{segmentación por dominios de masa y barreras de aislamiento galvánico}, tal y como se ilustra en la arquitectura global de la Figura \ref{fig:diagrama_bloques_global}.
 
 \begin{figure}[ht]
     \centering
@@ -64,7 +64,7 @@ Cada puerto físico que conecta con el exterior del chasis incorpora circuitos d
 % El procesador se comunica con el entorno del centro de transformación a través de interfaces aisladas:
 % \begin{itemize}
 %     \item \textbf{Doble Puerto Ethernet (10/100 Mbps):} Basado en controladores MAC integrados en la MPU y transceptores PHY externos comunicados vía MII/RMII. El aislamiento magnético de $10\text{ kV}_{\text{RMS}}$ y de $6\text{ kV}_{\text{RMS}}$ previene interferencias galvánicas procedentes de switches de subestación.
-%     \item \textbf{Bus Industrial RS-485 Aislado:} Destinado a la conexión local de medidores modbus o unidades de supervisión de centro de transformación (TRM). Implementa transceptores con barrera galvánica integrada ($2.5\text{ kV}_{\text{RMS}}$) y terminación de línea conmutable mediante jumpers de hardware.
+%     \item \textbf{Bus Industrial RS-485 Aislado:} Destinado a la conexión local de medidores modbus o unidades de supervisión de centro de transformación (TRM). Implementa transceptores con barrera galvánica integrada ($2.5\text{ kV}_{\text{RMS}}$) y terminación de línea conmutable mediante jumpers de \textit{hardware}.
 %     \item \textbf{Entradas/Salidas Digitales Optocopladas:} Dos entradas digitales de detección ($0\text{--}24\text{ VDC}$) con aislamiento por optocoplador para monitorear alarmas físicas (p. ej., apertura de puerta del centro o disparo de fusibles) y dos salidas de relé de estado sólido (\textit{SSR}) para maniobra remota.
 % \end{itemize}
 
@@ -87,7 +87,7 @@ Al delegar las tareas de aplicación y transporte en Linux embebido, el i.MX 93 
 \subsection{Microcontrolador Coprocesador Dedicado: Microchip PIC32CXMTC}
 \label{subsec:coprocesador_pic32}
 
-Para descargar a la MPU Host de las interrupciones críticas en tiempo real y optimizar el BOM, el plano inferior es asumido por el microcontrolador especializado \textbf{Microchip PIC32CXMTC}. Este SoC de 32 bits integra hardware de metrología, unidades criptográficas y soporte nativo para la pila de protocolos PRIME 1.4 a través del entorno \textbf{Microchip Harmony v3}.
+Para descargar a la MPU Host de las interrupciones críticas en tiempo real y optimizar el BOM, el plano inferior es asumido por el microcontrolador especializado \textbf{Microchip PIC32CXMTC}. Este SoC de 32 bits integra \textit{hardware} de metrología, unidades criptográficas y soporte nativo para la pila de protocolos PRIME 1.4 a través del entorno \textbf{Microchip Harmony v3}.
 
 Las funciones principales asignadas al PIC32CXMTC se estructuran en cinco ejes operativos:
 
@@ -119,7 +119,7 @@ La comunicación entre el plano de aplicación (MPU Host i.MX 93) y el plano de 
     \item \textbf{Bus Principal SPI (Master/Slave):} Constituye el canal síncrono principal de comunicación inter-procesador. La MPU Host actúa como controlador SPI (\textit{Master}) y el PIC32CXMTC como periférico (\textit{Slave}). A través de este bus de alta velocidad se transporta todo el flujo binario de tramas de telegestión DLMS/COSEM, intercambio de mensajes de la capa MAC de PRIME, perfiles de carga acumulados y registros periódicos de metrología.
 
     %Revisar si en realidad está este GPIO conectado, no lo recuerdo ahora si había una línea de interrupción dedicada como MCU_int_to_SOM o algo parecido. Si no, habría que eliminar este item.
-    \item \textbf{Línea de Interrupción por GPIO:} Señal digital orientada desde el PIC32CXMTC hacia la MPU Host. Actúa como interrupción hardware (\textit{IRQ}) para notificar la recepción de tramas PLC, eventos de metrología o alarmas físicas sin necesidad de recurrir a esquemas de sondeado (\textit{polling}), reduciendo la carga de procesamiento del sistema operativo Linux.
+    \item \textbf{Línea de Interrupción por GPIO:} Señal digital orientada desde el PIC32CXMTC hacia la MPU Host. Actúa como interrupción \textit{hardware} (\textit{IRQ}) para notificar la recepción de tramas PLC, eventos de metrología o alarmas físicas sin necesidad de recurrir a esquemas de sondeado (\textit{polling}), reduciendo la carga de procesamiento del sistema operativo Linux.
 
     \item \textbf{Interfaz SWD (Serial Wire Debug):} La programación inicial del firmware en línea de producción y la depuración en circuito del núcleo ARM Cortex-M4F del PIC32CXMTC se realizan mediante el estándar industrial \textit{\textbf{SWD}} (líneas \texttt{SWDIO} y \texttt{SWCLK}), descartando esquemas antiguos como \textbf{ICSP} (\textit{In-Circuit Serial Programming}) y facilitando el acceso a través del conector interno de la PCB y pistas desde el SOM hacia la MCU, habilitando así también la posibilidad de realizar la programación del firmware directamente desde el SOM mediante software genérico o abierto de programación como (\textit{OpenOCD}).
 
@@ -147,7 +147,7 @@ El subsistema de comunicaciones PLC constituye el elemento diferencial del DCU. 
 \subsection{Frente Analógico (AFE) y Driver de Inyección Trifásico}
 \label{subsec:afe_driver}
 
-El módulo analógico (AFE) se articula en torno a un módem transceptor integrado, utilizando para ello el desarrollado por la empresa de semiconductores \textbf{\textit{Microchip}}, el \textbf{MPL460A}, gobernado por un DSP dedicado para la capa física PHY. Para inyectar la señal en las tres fases ($R, S, T$) sin sufrir los efectos severos de la desadaptación de impedancias descritos por Hallak y Bumiller \cite{6525864}, el hardware incorpora una etapa de amplificación lineal de alta corriente y acoplamiento trifásico direccionable, compuesto de 3 transformadores de señal, con aislamiento galvánico de $5\text{ kV}_{\text{RMS}}$, y 3 optoacopladores bidireccionales, con baja impedancia de conducción, para seleccionar la fase de inyección y de recepción, tal y como se muestra en la figura \ref{fig:3ph_coupling}.
+El módulo analógico (AFE) se articula en torno a un módem transceptor integrado, utilizando para ello el desarrollado por la empresa de semiconductores \textbf{\textit{Microchip}}, el \textbf{MPL460A}, gobernado por un DSP dedicado para la capa física PHY. Para inyectar la señal en las tres fases ($R, S, T$) sin sufrir los efectos severos de la desadaptación de impedancias descritos por Hallak y Bumiller \cite{6525864}, el \textit{hardware} incorpora una etapa de amplificación lineal de alta corriente y acoplamiento trifásico direccionable, compuesto de 3 transformadores de señal, con aislamiento galvánico de $5\text{ kV}_{\text{RMS}}$, y 3 optoacopladores bidireccionales, con baja impedancia de conducción, para seleccionar la fase de inyección y de recepción, tal y como se muestra en la figura \ref{fig:3ph_coupling}.
 
 \begin{figure}[ht]
     \centering
@@ -159,19 +159,19 @@ El módulo analógico (AFE) se articula en torno a un módem transceptor integra
 
 En transmisiones OFDM multiportadora, la impedancia del circuito emisor en estado de transmisión ($TX$) debe ser extremadamente baja ($Z_1 \approx 0\,\Omega$) para garantizar la máxima transferencia de tensión hacia la red ($V_{TX}$) \cite{6525864}. Sin embargo, cuando operan múltiples transmisores no interoperables en la misma línea, esta baja impedancia en TX provoca la absorción y atenuación de la señal útil en fases adyacentes \cite{6525864}. Aunque la norma CENELEC EN 50065-7 fija restricciones de impedancia mínima en recepción/transmisión ($Z_e \ge 3\text{--}5\,\Omega$), su implementación física en etapas analógicas OFDM resulta inviable y costosa \cite{6525864}.
 
-Para solventar esta limitación sin violar los límites de compatibilidad electromagnética, el hardware del concentrador utiliza un \textbf{esquema de acoplamiento capacitivo/inductivo trifásico con desacoplo de canal} \cite{6525864, 5764420}. Mediante la red de filtros pasa-banda sintonizados de alto orden y transformadores de aislamiento galvánico de alta frecuencia, el driver inyecta la señal de forma simétrica o seleccionable fase a fase, minimizando el acoplamiento parásito inter-fase y aislando la etapa digital de las tensiones de $230/400\text{ VAC}$.
+Para solventar esta limitación sin violar los límites de compatibilidad electromagnética, el \textit{hardware} del concentrador utiliza un \textbf{esquema de acoplamiento capacitivo/inductivo trifásico con desacoplo de canal} \cite{6525864, 5764420}. Mediante la red de filtros pasa-banda sintonizados de alto orden y transformadores de aislamiento galvánico de alta frecuencia, el driver inyecta la señal de forma simétrica o seleccionable fase a fase, minimizando el acoplamiento parásito inter-fase y aislando la etapa digital de las tensiones de $230/400\text{ VAC}$.
 
 \subsection{Ampliación a Banda Extendida (FCC) y Módulo Celular LTE}
 \label{subsec:banda_fcc_lte}
 
-Aunque la banda CENELEC-A (9--95 kHz) es el estándar de telegestión regulado en Europa, los ensayos empíricos de canal en entornos industriales demuestran que esta franja es altamente susceptible al ruido pulsante de motores y electrónica de potencia, registrando picos de interferencia de hasta $74\text{ dB}\mu\text{V}$ a $71\text{ kHz}$ \cite{7390450}. Por el contrario, la banda FCC (10--490 kHz, centrada en $270\text{ kHz}$) presenta un suelo de ruido significativamente menor ($60\text{ dB}\mu\text{V}$), permitiendo alcanzar caudales de transmisión de hasta $34.28\text{ kbps}$ con modulaciones D8PSK y tasas de error de paquete ($\text{PER} < 1\%$) \cite{7390450}. Por ello, el hardware del AFE se diseña con un ancho de banda flexible capaz de operar tanto en CENELEC-A como en la banda extendida FCC.
+Aunque la banda CENELEC-A (9--95 kHz) es el estándar de telegestión regulado en Europa, los ensayos empíricos de canal en entornos industriales demuestran que esta franja es altamente susceptible al ruido pulsante de motores y electrónica de potencia, registrando picos de interferencia de hasta $74\text{ dB}\mu\text{V}$ a $71\text{ kHz}$ \cite{7390450}. Por el contrario, la banda FCC (10--490 kHz, centrada en $270\text{ kHz}$) presenta un suelo de ruido significativamente menor ($60\text{ dB}\mu\text{V}$), permitiendo alcanzar caudales de transmisión de hasta $34.28\text{ kbps}$ con modulaciones D8PSK y tasas de error de paquete ($\text{PER} < 1\%$) \cite{7390450}. Por ello, el \textit{hardware} del AFE se diseña con un ancho de banda flexible capaz de operar tanto en CENELEC-A como en la banda extendida FCC.
 
 Para la red de transporte WAN hacia el sistema central (HES), la placa auxiliar de expansión incluye un módulo módem celular LTE Cat-1 / NB-IoT con soporte de tarjeta eSIM/SIM industrial y antena externa.
 
 \subsection{Módulo RF Híbrido Inalámbrico (IEEE Std 1901.3-2025)}
 \label{subsec:rf_hibrido}
 
-Para solventar escenarios de atenuación extrema en la línea eléctrica (tales como la apertura de seccionadores o la presencia de filtros bloqueadores de alta impedancia), la arquitectura de hardware reserva una interfaz SPI/UART de alta velocidad para un módulo transceptor de radiofrecuencia (RF) sub-1 GHz.
+Para solventar escenarios de atenuación extrema en la línea eléctrica (tales como la apertura de seccionadores o la presencia de filtros bloqueadores de alta impedancia), la arquitectura de \textit{hardware} reserva una interfaz SPI/UART de alta velocidad para un módulo transceptor de radiofrecuencia (RF) sub-1 GHz.
 
 Esta aproximación responde a las especificaciones del nuevo estándar \textbf{IEEE Std 1901.3-2025}, el cual establece el marco internacional para comunicaciones híbridas PLC/RF en redes inteligentes \cite{11267209}. La combinación síncrona de ambos medios en la capa MAC permite elevar la tasa de entrega de paquetes del $70\%$ (solo PLC) o $82\%$ (solo RF) a cifras superiores al \textbf{$90\%$} mediante enrutamiento híbrido dinámico \cite{7390450}.
 
@@ -180,7 +180,7 @@ Conforme a la norma IEEE 1901.3-2025, el módulo RF debe operar en las bandas IS
 \section{Subsistema de Metrología Trifásica de Precisión y Calibración}
 \label{sec:metrologia_trifasica}
 
-La función de supervisión de baja tensión y metrología de balance en el CT exige la captura precisa de parámetros eléctricos trifásicos en tiempo real \cite{10488780}. En la arquitectura unificada del DCU, esta tarea se delega en el microcontrolador especializado \textbf{PIC32CXMTC} de Microchip, el cual integra un núcleo AFE de metrología hardware de alta resolución operando en coordinación con la librería de metrología en firmware (Harmony v3). Sin emabrgo, para el caso de metrología trifásica, el sensado se debe delegar a un chip de metrología dedicado, el \textbf{ATSENSE301} de Microchip, el cual constituirá el AFE de medición trifásica de alta resolución, con 3 canales de tensión y 4 canales de corriente, gestionado con la librería de metrología de Microchip desde el PIC32 a través de comunicación SPI.
+La función de supervisión de baja tensión y metrología de balance en el CT exige la captura precisa de parámetros eléctricos trifásicos en tiempo real \cite{10488780}. En la arquitectura unificada del DCU, esta tarea se delega en el microcontrolador especializado \textbf{PIC32CXMTC} de Microchip, el cual integra un núcleo AFE de metrología \textit{hardware} de alta resolución operando en coordinación con la librería de metrología en firmware (Harmony v3). Sin emabrgo, para el caso de metrología trifásica, el sensado se debe delegar a un chip de metrología dedicado, el \textbf{ATSENSE301} de Microchip, el cual constituirá el AFE de medición trifásica de alta resolución, con 3 canales de tensión y 4 canales de corriente, gestionado con la librería de metrología de Microchip desde el PIC32 a través de comunicación SPI.
 
 Esta integración permite consolidar en un único circuito integrado las funciones de cálculo energético, procesamiento fasorial, temporización RTC y ejecución de la pila MAC del protocolo PRIME, optimizando drásticamente el BOM y el espacio en placa.
 
@@ -200,7 +200,7 @@ El filtrado analógico secundario se implementa mediante filtros pasa-bajo RC de
 \subsection{Clases de Precisión y Funciones de Medición}
 \label{subsec:clases_precision_mediciones}
 
-El motor de metrología del PIC32CXMTC procesa de forma continua muestras síncronas para calcular magnitudes instantáneas y acumuladas con una tasa de refresco $\le 1\text{ s}$. El hardware cumple con los estándares internacionales de telegestión energética:
+El motor de metrología del PIC32CXMTC procesa de forma continua muestras síncronas para calcular magnitudes instantáneas y acumuladas con una tasa de refresco $\le 1\text{ s}$. El \textit{hardware} cumple con los estándares internacionales de telegestión energética:
 \begin{itemize}
     \item \textbf{Energía Activa:} Clase B (o superior, $\pm 1\%$ de error de medida) según la norma europea \textbf{EN 50470-3}.
     \item \textbf{Energía Reactiva:} Clase 2 (o superior) según la norma \textbf{EN 62053-23}.
