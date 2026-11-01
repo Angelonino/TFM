@@ -1,0 +1,168 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   GLOSARIO: definición de siglas y términos
+%   - Uso en el texto: \gls{clave} (singular), \glspl{clave} (plural),
+%     \Gls{clave} / \Glspl{clave} (inicio de frase).
+%   - Solo se imprimen en el glosario las entradas que se usan en la memoria.
+%   - Para añadir una entrada nueva, copiar una existente y cambiar la clave.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Macro auxiliar: sigla con su desarrollo en inglés + explicación en castellano
+% \sigla{clave}{SIGLA}{Desarrollo en inglés}{Explicación.}
+\newcommand{\sigla}[4]{%
+  \newglossaryentry{#1}{name={#2}, sort={#2}, description={\textit{#3}. #4}}}
+% Sigla sin desarrollo en inglés (castellano u otro idioma ya incluido en la explicación)
+\newcommand{\siglaes}[3]{%
+  \newglossaryentry{#1}{name={#2}, sort={#2}, description={#3}}}
+
+%% ------------------------------- SIGLAS -------------------------------
+\sigla{aan}{AAN}{Asymmetric Artificial Network}{Red artificial asimétrica. Red de estabilización de impedancia empleada en los ensayos de emisiones conducidas en puertos de comunicaciones (p.~ej., Ethernet).}
+\sigla{ac}{AC}{Alternating Current}{Corriente alterna.}
+\sigla{adc}{ADC}{Analog to Digital Converter}{Conversor analógico a digital.}
+\sigla{afe}{AFE}{Analog Front-End}{Etapa analógica que acondiciona las señales entre el medio físico y la electrónica digital (acoplamiento, filtrado y amplificación), tanto en la interfaz PLC como en la cadena de medida.}
+\sigla{ami}{AMI}{Advanced Metering Infrastructure}{Infraestructura de medición avanzada. Sistema integrado de contadores inteligentes, redes de comunicación y sistemas centrales que permite la comunicación bidireccional entre la distribuidora y los puntos de suministro.}
+\sigla{amr}{AMR}{Automatic Meter Reading}{Lectura automática de contadores. Primera generación de sistemas de telemedida, principalmente unidireccionales.}
+\siglaes{at}{AT}{Alta Tensión. Nivel de tensión empleado en la red de transporte de energía eléctrica (36 - 220 kV).}
+\sigla{av}{AV}{Average}{Detector de valor promedio empleado en las medidas de emisiones electromagnéticas.}
+\sigla{bom}{BOM}{Bill Of Materials}{Lista de materiales. Relación de componentes necesarios para fabricar un equipo, base de su coste de fabricación.}
+\sigla{bpsk}{BPSK}{Binary Phase Shift Keying}{Modulación digital por desplazamiento de fase binaria.}
+\siglaes{bt}{BT}{Baja Tensión. Nivel de tensión de la red de distribución que llega a los usuarios finales (230/400~V en Europa).}
+\siglaes{cat}{CAT}{Categoría de instalación. Clasificación de un equipo según su punto de conexión en la instalación eléctrica y las sobretensiones transitorias que debe soportar.}
+\siglaes{cenelec}{CENELEC}{\textit{Comité Européen de Normalisation Électrotechnique}. Comité Europeo de Normalización Electrotécnica. Su norma EN 50065-1 define las bandas PLC CENELEC-A, B, C y D entre 3 y 148,5~kHz.}
+\siglaes{cispr}{CISPR}{\textit{Comité International Spécial des Perturbations Radioélectriques}. Comité de la IEC encargado de la normalización de las perturbaciones radioeléctricas.}
+\sigla{cl}{CL}{Convergence Layer}{Capa de convergencia. Capa de la pila PRIME situada sobre la capa MAC que adapta el tráfico de las distintas aplicaciones.}
+\sigla{cosem}{COSEM}{Companion Specification for Energy Metering}{Modelo de objetos de interfaz para equipos de medida, empleado junto a DLMS en la telegestión.}
+\sigla{cpu}{CPU}{Central Processing Unit}{Unidad central de procesamiento.}
+\newglossaryentry{ct}{name={CT}, sort={CT}, plural={CTs},
+  description={Centro de Transformación (\textit{Secondary Substation}). Instalación en la que se transforma la energía de media a baja tensión y en la que se instala el DCU.}}
+\sigla{dbpsk}{DBPSK}{Differential Binary Phase Shift Keying}{Modulación diferencial por desplazamiento de fase binaria, empleada en las subportadoras OFDM de PRIME.}
+\sigla{dqpsk}{DQPSK}{Differential Quadrature Phase Shift Keying}{Modulación diferencial por desplazamiento de fase en cuadratura.}
+\sigla{deightpsk}{D8PSK}{Differential 8-Phase Shift Keying}{Modulación diferencial por desplazamiento de fase de 8 estados.}
+\sigla{da}{DA}{Distribution Automation}{Automatización de la distribución. Aplicaciones de supervisión y control remoto de la red de distribución.}
+\sigla{dc}{DC}{Direct Current}{Corriente continua.}
+\newglossaryentry{dcu}{name={DCU}, sort={DCU}, plural={DCUs},
+  description={\textit{Data Concentrator Unit}. Concentrador de datos. Equipo instalado en el CT que gestiona la red PLC de los contadores inteligentes y la comunicación con los sistemas centrales de la distribuidora. Objeto de este trabajo.}}
+\siglaes{din}{DIN}{\textit{Deutsches Institut für Normung}. Instituto Alemán de Normalización; da nombre al carril normalizado de montaje en cuadros eléctricos (carril DIN).}
+\sigla{dlms}{DLMS}{Device Language Message Specification}{Protocolo de aplicación para el intercambio de datos con equipos de medida (IEC 62056).}
+\sigla{dpdt}{DPDT}{Double Pole Double Throw}{Relé o conmutador de dos polos y dos posiciones.}
+\newglossaryentry{dso}{name={DSO}, sort={DSO}, plural={DSOs},
+  description={\textit{Distribution System Operator}. Operador del sistema de distribución (distribuidora).}}
+\sigla{dsp}{DSP}{Digital Signal Processing / Processor}{Procesado digital de señal o procesador dedicado a ello.}
+\sigla{emc}{EMC}{ElectroMagnetic Compatibility}{Compatibilidad electromagnética. Capacidad de un equipo de funcionar correctamente en su entorno electromagnético sin introducir perturbaciones inadmisibles.}
+\sigla{emi}{EMI}{ElectroMagnetic Interference}{Interferencia electromagnética.}
+\sigla{emmc}{eMMC}{embedded MultiMediaCard}{Memoria flash no volátil integrada.}
+\sigla{esd}{ESD}{ElectroStatic Discharge}{Descarga electrostática.}
+\siglaes{etsi}{ETSI}{\textit{European Telecommunications Standards Institute}. Instituto Europeo de Normas de Telecomunicaciones.}
+\sigla{eut}{EUT}{Equipment Under Test}{Equipo bajo ensayo.}
+\sigla{fcc}{FCC}{Federal Communications Commission}{Comisión Federal de Comunicaciones de EE.~UU. Su regulación permite el uso PLC hasta 490~kHz.}
+\sigla{fec}{FEC}{Forward Error Correction}{Codificación de corrección de errores en recepción sin retransmisión.}
+\sigla{fer}{FER}{Frame Error Rate}{Tasa de error de trama.}
+\sigla{fft}{FFT}{Fast Fourier Transform}{Transformada rápida de Fourier.}
+\sigla{fsk}{FSK}{Frequency Shift Keying}{Modulación por desplazamiento de frecuencia.}
+\sigla{gtresplc}{G3-PLC}{G3 Power Line Communication}{Estándar NB-PLC basado en OFDM (ITU-T G.9903), alternativo a PRIME.}
+\sigla{gpio}{GPIO}{General Purpose Input/Output}{Pin de entrada/salida de propósito general.}
+\sigla{hes}{HES}{Head-End System}{Sistema central de gestión que recoge los datos de los DCUs y contadores.}
+\sigla{hf}{HF}{High Frequency}{Alta frecuencia. En este trabajo, referido a la frecuencia de conmutación de la fuente de alimentación.}
+\sigla{hv}{HV}{High Voltage}{Alta tensión. En este trabajo, referido al rango de tensión de entrada de la fuente de alimentación.}
+\sigla{icsp}{ICSP}{In-Circuit Serial Programming}{Programación serie en circuito.}
+\siglaes{iec}{IEC}{\textit{International Electrotechnical Commission}. Comisión Electrotécnica Internacional.}
+\siglaes{ieee}{IEEE}{\textit{Institute of Electrical and Electronics Engineers}. Instituto de Ingenieros Eléctricos y Electrónicos.}
+\sigla{ifft}{IFFT}{Inverse Fast Fourier Transform}{Transformada rápida inversa de Fourier.}
+\sigla{ip}{IP}{Internet Protocol}{Protocolo de Internet.}
+\sigla{ipv6}{IPv6}{Internet Protocol version 6}{Versión 6 del protocolo de Internet.}
+\sigla{irq}{IRQ}{Interrupt Request}{Petición de interrupción.}
+\sigla{ism}{ISM}{Industrial, Scientific and Medical}{Bandas de radiofrecuencia de uso libre para aplicaciones industriales, científicas y médicas.}
+\siglaes{iso}{ISO}{\textit{International Organization for Standardization}. Organización Internacional de Normalización.}
+\siglaes{itut}{ITU-T}{\textit{International Telecommunication Union - Telecommunication Standardization Sector}. Sector de Normalización de las Telecomunicaciones de la Unión Internacional de Telecomunicaciones.}
+\sigla{lan}{LAN}{Local Area Network}{Red de área local.}
+\sigla{ldr}{LDR}{Light Dependent Resistor}{Fotorresistencia.}
+\sigla{lisn}{LISN}{Line Impedance Stabilization Network}{Red de estabilización de impedancia de línea. Presenta una impedancia de red conocida al equipo bajo ensayo y aísla la medida del ruido de la red.}
+\sigla{llc}{LLC}{Inductor-Inductor-Capacitor}{Convertidor resonante con tanque formado por dos inductancias y un condensador.}
+\sigla{lna}{LNA}{Low-Noise Amplifier}{Amplificador de bajo ruido.}
+\sigla{lte}{LTE}{Long Term Evolution}{Estándar de comunicaciones móviles de cuarta generación (4G).}
+\sigla{mac}{MAC}{Medium Access Control}{Capa de control de acceso al medio.}
+\sigla{mcu}{MCU}{Microcontroller Unit}{Microcontrolador.}
+\sigla{mlcc}{MLCC}{Multi-Layer Ceramic Capacitor}{Condensador cerámico multicapa.}
+\sigla{mosfet}{MOSFET}{Metal-Oxide-Semiconductor Field-Effect Transistor}{Transistor de efecto campo metal-óxido-semiconductor.}
+\sigla{mpdu}{MPDU}{MAC Protocol Data Unit}{Unidad de datos del protocolo de la capa MAC.}
+\sigla{mpu}{MPU}{Microprocessor Unit}{Microprocesador de aplicaciones, capaz de ejecutar un sistema operativo como Linux.}
+\siglaes{mt}{MT}{Media Tensión. Nivel de tensión de la red de distribución entre la subestación y los CTs (1-36 kV).}
+\sigla{nbiot}{NB-IoT}{Narrowband Internet of Things}{Tecnología celular de banda estrecha para dispositivos IoT de bajo consumo.}
+\sigla{nbplc}{NB-PLC}{Narrow Band Power Line Communications}{Comunicaciones por red eléctrica de banda estrecha (3--500~kHz).}
+\sigla{npu}{NPU}{Neural Processing Unit}{Unidad de aceleración de redes neuronales.}
+\sigla{ofdm}{OFDM}{Orthogonal Frequency Division Multiplexing}{Multiplexación por división de frecuencias ortogonales. Modulación multiportadora empleada por PRIME y G3-PLC.}
+\sigla{osi}{OSI}{Open Systems Interconnection}{Modelo de referencia de interconexión de sistemas abiertos, organizado en siete capas.}
+\sigla{ovc}{OVC}{Overvoltage Category}{Categoría de sobretensión según la IEC 60664-1.}
+\sigla{pcb}{PCB}{Printed Circuit Board}{Placa de circuito impreso.}
+\sigla{pco}{PCO}{Proxy Coordinator}{Estación o repetidor híbrido que coordina el tráfico entre los dominios PLC y RF.}
+\sigla{per}{PER}{Packet Error Rate}{Tasa de error de paquete.}
+\sigla{phy}{PHY}{Physical Layer}{Capa física.}
+\sigla{plc}{PLC}{Power Line Communications}{Comunicaciones por red eléctrica. Tecnología que emplea el propio cableado eléctrico como medio de transmisión de datos.}
+\sigla{prime}{PRIME}{PoweRline Intelligent Metering Evolution}{Estándar abierto NB-PLC basado en OFDM (ITU-T G.9904) para la telegestión de contadores inteligentes.}
+\sigla{psu}{PSU}{Power Supply Unit}{Fuente de alimentación.}
+\sigla{qam}{QAM}{Quadrature Amplitude Modulation}{Modulación de amplitud en cuadratura.}
+\sigla{qp}{QP}{Quasi-Peak}{Detector de cuasi-pico empleado en las medidas de emisiones electromagnéticas.}
+\sigla{qpsk}{QPSK}{Quadrature Phase Shift Keying}{Modulación por desplazamiento de fase en cuadratura.}
+\sigla{ram}{RAM}{Random Access Memory}{Memoria de acceso aleatorio.}
+\sigla{rf}{RF}{Radio Frequency}{Radiofrecuencia.}
+\sigla{rifs}{RIFS}{Response Interframe Spacing}{Tiempo de espera entre una trama y su respuesta.}
+\sigla{rms}{RMS}{Root Mean Square}{Valor eficaz.}
+\sigla{rsfoureightfive}{RS-485}{Recommended Standard 485}{Estándar de comunicación serie diferencial multipunto.}
+\sigla{rssi}{RSSI}{Received Signal Strength Indicator}{Indicador de intensidad de señal recibida.}
+\sigla{rtc}{RTC}{Real-Time Clock}{Reloj de tiempo real.}
+\sigla{rx}{RX}{Reception}{Recepción.}
+\sigla{sac}{SAC}{Semi-Anechoic Chamber}{Cámara semianecoica empleada en los ensayos de emisiones radiadas.}
+\sigla{selv}{SELV}{Safety Extra-Low Voltage}{Muy baja tensión de seguridad.}
+\sigla{sfsk}{S-FSK}{Spread Frequency Shift Keying}{Modulación FSK con portadoras muy separadas, empleada en la segunda generación de sistemas PLC.}
+\sigla{smps}{SMPS}{Switched-Mode Power Supply}{Fuente de alimentación conmutada.}
+\sigla{snr}{SNR}{Signal-to-Noise Ratio}{Relación señal-ruido.}
+\sigla{soc}{SoC}{System-on-Chip}{Sistema en un chip.}
+\sigla{som}{SoM}{System on Module}{Módulo que integra procesador, memoria y alimentación en una placa enchufable.}
+\sigla{spi}{SPI}{Serial Peripheral Interface}{Bus de comunicación serie síncrono.}
+\sigla{swd}{SWD}{Serial Wire Debug}{Interfaz de depuración y programación de dos hilos de los procesadores Arm.}
+\siglaes{tc}{TC}{Transformador de Corriente (\textit{Current Transformer}). Abreviado TC en este documento para no confundirlo con CT (Centro de Transformación).}
+\sigla{tco}{TCO}{Total Cost of Ownership}{Coste total de propiedad: coste de adquisición más los costes de instalación, operación y mantenimiento durante la vida útil.}
+\sigla{tcr}{TCR}{Temperature Coefficient of Resistance}{Coeficiente de temperatura de una resistencia.}
+\sigla{tls}{TLS}{Transport Layer Security}{Protocolo criptográfico de seguridad en la capa de transporte.}
+\sigla{ttl}{TTL}{Transistor-Transistor Logic}{Familia lógica; por extensión, niveles lógicos digitales.}
+\sigla{twacs}{TWACS}{Two-Way Automatic Communication System}{Sistema de comunicación bidireccional UNB-PLC.}
+\sigla{tx}{TX}{Transmission}{Transmisión.}
+\sigla{uart}{UART}{Universal Asynchronous Receiver Transmitter}{Interfaz de comunicación serie asíncrona.}
+\sigla{unbplc}{UNB-PLC}{Ultra-Narrowband Power Line Communications}{Comunicaciones por red eléctrica de banda ultraestrecha (por debajo de 3~kHz).}
+\sigla{usb}{USB}{Universal Serial Bus}{Bus serie universal.}
+\sigla{wan}{WAN}{Wide Area Network}{Red de área extensa. En el DCU, enlace ascendente hacia el HES.}
+\sigla{zcs}{ZCS}{Zero Current Switching}{Conmutación a corriente nula.}
+\sigla{zvs}{ZVS}{Zero Voltage Switching}{Conmutación a tensión nula. El transistor se enciende con tensión nula entre sus terminales, reduciendo las pérdidas de conmutación.}
+
+%% ------------------------------- TÉRMINOS -------------------------------
+\newglossaryentry{nodobase}{name={Nodo Base}, sort={Nodo Base},
+  description={(\textit{Base Node}). Nodo raíz de una subred PRIME, embebido en el DCU, que gestiona el registro de los nodos, la topología y el acceso al medio.}}
+\newglossaryentry{nodoservicio}{name={Nodo de Servicio}, sort={Nodo de Servicio}, plural={Nodos de Servicio},
+  description={(\textit{Service Node}). Nodo terminal de una subred PRIME, típicamente un contador inteligente.}}
+\newglossaryentry{switchprime}{name={Switch}, sort={Switch}, plural={Switches},
+  description={Nodo de Servicio PRIME promocionado por el Nodo Base para actuar como repetidor de señal, extendiendo el alcance de la subred.}}
+\newglossaryentry{baliza}{name={Baliza}, text={baliza}, sort={Baliza}, plural={balizas},
+  description={(\textit{Beacon}). Trama periódica de sincronización y control emitida por el Nodo Base y retransmitida por los Switches en una subred PRIME.}}
+\newglossaryentry{comercializadora}{name={Comercializadora}, text={comercializadora}, sort={Comercializadora}, plural={comercializadoras},
+  description={(\textit{Retailer}). Empresa que vende la energía eléctrica al usuario final y le factura, sin ser propietaria de la red.}}
+\newglossaryentry{distribuidora}{name={Distribuidora}, text={distribuidora}, sort={Distribuidora}, plural={distribuidoras},
+  description={Empresa propietaria y responsable de la operación de la red de distribución y de los equipos de medida. Ver DSO.}}
+\newglossaryentry{contadorint}{name={Contador inteligente}, text={contador inteligente}, sort={Contador inteligente}, plural={contadores inteligentes},
+  description={(\textit{Smart Meter}). Contador electrónico de energía con capacidad de comunicación bidireccional para su telegestión remota.}}
+\newglossaryentry{telegestion}{name={Telegestión}, text={telegestión}, sort={Telegestion},
+  description={Lectura, parametrización y operación remota de los contadores y equipos de la red de distribución.}}
+\newglossaryentry{controlrizado}{name={Control de rizado}, text={control de rizado}, sort={Control de rizado},
+  description={(\textit{Ripple Control}). Primera generación de sistemas PLC, unidireccionales y de muy baja tasa, para la gestión centralizada de cargas.}}
+\newglossaryentry{precertificacion}{name={Precertificación}, text={precertificación}, sort={Precertificacion},
+  description={(\textit{Pre-compliance}). Campaña de ensayos previa a la certificación en laboratorio acreditado, para detectar y corregir incumplimientos de forma temprana.}}
+\newglossaryentry{conmutacionsuave}{name={Conmutación suave}, text={conmutación suave}, sort={Conmutacion suave},
+  description={(\textit{Soft-Switching}). Técnicas para conmutar los transistores con tensión o corriente nula (ZVS, ZCS) para reducir pérdidas y emisiones EMI.}}
+\newglossaryentry{flyback}{name={Flyback}, sort={Flyback},
+  description={Topología de convertidor DC-DC aislado derivada del convertidor reductor-elevador, en la que el transformador almacena energía durante la conducción del transistor y la cede a la salida durante el bloqueo.}}
+\newglossaryentry{redinteligente}{name={Red eléctrica inteligente}, text={red eléctrica inteligente}, sort={Red electrica inteligente}, plural={redes eléctricas inteligentes},
+  description={(\textit{Smart Grid}). Red eléctrica que incorpora comunicaciones y control digital para mejorar la observabilidad, eficiencia y gestión de la demanda.}}
+\newglossaryentry{creepage}{name={Creepage}, text={creepage}, sort={Creepage},
+  description={Línea de fuga. Distancia más corta entre dos partes conductoras medida sobre la superficie del aislante.}}
+\newglossaryentry{clearance}{name={Clearance}, text={clearance}, sort={Clearance},
+  description={Distancia de aislamiento en el aire. Distancia más corta entre dos partes conductoras medida a través del aire.}}
+\newglossaryentry{lastgasp}{name={Last gasp}, text={last gasp}, sort={Last gasp},
+  description={Último suspiro. Capacidad del equipo de enviar una última notificación de fallo de alimentación gracias a la energía almacenada.}}

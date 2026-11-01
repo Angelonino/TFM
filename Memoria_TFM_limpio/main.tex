@@ -22,6 +22,11 @@
 
 \usepackage{hyperref}
 
+% Glosario de siglas y términos (definiciones en Glosario.tex)
+\usepackage[toc,nonumberlist,nopostdot,nogroupskip,style=list]{glossaries}
+\makenoidxglossaries
+\input{Glosario}
+
 %	CONFIGURACIÓN DE PÁGINA
 
 \setlength{\paperwidth}{21cm}          % Ancho de página
@@ -147,6 +152,12 @@ ESCUELA DE INGENIERÍA Y ARQUITECTURA\\
 \cleardoublepage
 \renewcommand{\contentsname}{Índice}
 \tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%		Glosario
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\printnoidxglossary[title=Glosario,toctitle=Glosario,sort=letter]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %		Capitulos
