@@ -4,12 +4,12 @@
 \section{Requerimientos de Diseño}
 \label{sec:requerimientos_psu}
 
-Como se justificó en el Capítulo \ref{ch:state_of_the_art} (Sección \ref{subsec:topologias_alta_frecuencia_tension}), la fuente de alimentación del \gls{dcu} de nueva generación no puede diseñarse como un bloque genérico de conversión \gls{dc}, sino que debe concebirse desde el primer momento como un subsistema que debe coexistir electromagnéticamente con el propio módem \gls{plc} al que alimenta. A esta restricción de frecuencia se suman los requisitos habituales de cualquier equipo de campo instalado en un \gls{ct}: un ciclo de vida de 15 años sin mantenimiento (Sección \ref{subsec:fuente_alimentacion_15anos}), ausencia de refrigeración activa, y la necesidad de sostener los distintos dominios de aislamiento galvánico descritos en el Capítulo \ref{ch:hardware_design} (Sección \ref{subsec:estrategia_aislamiento}). Esta sección recopila el conjunto de requisitos eléctricos, de aislamiento y de compatibilidad electromagnética (\gls{emc}) que se han utilizado como punto de partida para el dimensionamiento de la fuente.
+Como se justificó en el Capítulo \ref{ch:state_of_the_art} (Sección \ref{subsec:topologias_alta_frecuencia_tension}) y en el Capítulo \ref{ch:hardware_design} (Tabla \ref{tab:resumen_requisitos_dcu}), la fuente de alimentación del \gls{dcu} de nueva generación no puede diseñarse como un bloque genérico de conversión \gls{dc}, sino que debe concebirse desde el primer momento como un subsistema que debe coexistir electromagnéticamente con el propio módem \gls{plc} al que alimenta. A esta restricción de frecuencia se suman los requisitos habituales de cualquier equipo de campo instalado en un \gls{ct}: un ciclo de vida de 15 años sin mantenimiento (Sección \ref{subsec:fuente_alimentacion_15anos}), ausencia de refrigeración activa, y la necesidad de sostener los distintos dominios de aislamiento galvánico descritos en el Capítulo \ref{ch:hardware_design} (Sección \ref{subsec:estrategia_aislamiento}). Esta sección recopila el conjunto de requisitos eléctricos, de aislamiento y de compatibilidad electromagnética (\gls{emc}) que se han utilizado como punto de partida para el dimensionamiento de la fuente.
 
 \subsection{Requisitos Eléctricos de Entrada: Rango de Operación Nominal y Escenarios Anómalos de Red}
 \label{subsec:requisitos_entrada_psu}
 
-La fuente se alimenta directamente de la red trifásica de baja tensión del \gls{ct} ($L1/L2/L3/N$), debiendo permanecer operativa incluso si únicamente una de las tres fases se encuentra energizada. A lo largo de toda su vida útil, la fuente debe ser capaz de operar de forma continua e ininterrumpida dentro de un rango de tensión de entrada nominal comprendido aproximadamente entre 100 y 265 $\text{V}_{\text{AC,RMS}}$ (fase-neutro), con una frecuencia de red de 50 a 60 Hz.
+La fuente se alimenta directamente de la red trifásica de baja tensión del \gls{ct} ($L1/L2/L3/N$), debiendo permanecer operativa incluso si únicamente una de las tres fases se encuentra energizada. A lo largo de toda su vida útil, la fuente debe ser capaz de operar de forma continua e ininterrumpida dentro de un rango de tensión de entrada nominal comprendido aproximadamente entre 100 y 265 $\text{V}_{\text{AC,RMS}}$ (fase-neutro), lo que se traduce en tensiones desde 173 a 460 $\text{V}_{\text{AC,RMS}}$ en trifásica, con una frecuencia de red de 50 a 60 Hz.
 
 Además de este régimen de operación normal, el diseño debe contemplar de forma explícita dos escenarios anómalos de red, frente a los cuales la fuente debe sobrevivir sin degradación permanente durante un tiempo acotado, aunque sea reduciendo temporalmente sus prestaciones:
 
@@ -24,7 +24,7 @@ Estos dos escenarios anómalos condicionan de forma directa el dimensionamiento 
 \subsection{Requisitos de Aislamiento Galvánico}
 \label{subsec:requisitos_aislamiento_psu}
 
-De acuerdo con la segmentación por dominios de masa presentada en la Sección \ref{subsec:estrategia_aislamiento}, la fuente constituye la única vía de energía entre el \textbf{Dominio de Alta Tensión y Potencia (HV-Domain)} y los dominios de baja tensión del equipo. Por tratarse de un equipo de \textbf{Clase II} (doblemente aislado, sin conexión a tierra de protección), toda la energía transferida a través del transformador debe atravesar una barrera de \textbf{aislamiento reforzado}, y no una simple barrera de aislamiento básico o funcional.
+De acuerdo con la segmentación por dominios de masa presentada en la Sección \ref{subsec:estrategia_aislamiento}, la fuente constituye la única vía de energía entre el \textbf{Dominio de Alta Tensión y Potencia (HV-Domain)} y los dominios de baja tensión del equipo. Por tratarse de un equipo de \textbf{Clase II} (doblemente aislado, sin conexión a tierra de protección) y \textbf{\gls{cat} IV}, toda la energía transferida a través del transformador debe atravesar una barrera de \textbf{aislamiento reforzado}, y no una simple barrera de aislamiento básico o funcional.
 
 En términos cuantitativos, esta barrera debe ser capaz de soportar, como mínimo:
 \begin{itemize}
@@ -90,6 +90,90 @@ Huecos, interrupciones y variaciones de tensión (EN 61000-4-11) & Huecos hasta 
 Nótese que, según el criterio interno del equipo, los niveles de sobretensión tipo rayo (\textit{surge}, EN 61000-4-5) se elevan por encima de los mínimos normativos anteriores hasta $6\ \text{kV}$ en la entrada \gls{ac} (tanto en modo diferencial como en modo común) y hasta $4\ \text{kV}$ en las líneas de señal, con el fin de dotar al sistema de un margen adicional de robustez frente a transitorios de red severos.
 
 A esta batería de ensayos de inmunidad conducida se añade el requisito, ya introducido en el Capítulo \ref{ch:state_of_the_art}, de que la frecuencia de conmutación fundamental de la fuente se sitúe por encima de los 500 kHz, superando ampliamente el límite superior de la banda \gls{fcc} (hasta 490 kHz), de forma que ni la frecuencia fundamental de conmutación ni sus armónicos de mayor energía interfieran con la recepción \gls{plc} del propio equipo.
+
+\subsection{Requisito de Impedancia de Entrada Mínima del Puerto de Red}
+\label{subsec:requisito_impedancia_entrada_psu}
+
+Junto con la exigencia sobre la frecuencia de conmutación, el segundo requisito que acopla el diseño de la fuente con el funcionamiento del módem \gls{plc} es el de una \textbf{impedancia de entrada mínima} en el puerto de red del equipo. A diferencia de los límites de emisión de la Sección \ref{subsec:requisitos_emc_psu}, que tratan a la fuente como una \textit{fuente de perturbación}, este requisito la trata como una \textit{carga pasiva} conectada en los mismos terminales $L/N$ por los que el módem inyecta y recibe la señal \gls{plc}. En el Capítulo \ref{ch:hardware_design} (Tabla \ref{tab:resumen_requisitos_dcu}) este requisito figura como una de las restricciones de partida del equipo; esta subsección detalla su alcance y su motivación, y las consecuencias que tiene sobre la fuente.
+
+\subsubsection*{Enunciado del requisito}
+
+La impedancia que el equipo presenta en su puerto de red es la del \textbf{conjunto formado por la fuente de alimentación y el circuito de acoplamiento \gls{plc}}, conectados en paralelo a los mismos terminales. Sobre este conjunto se exige un módulo de impedancia de al menos $50\ \Omega$ tanto en la banda CENELEC-A como en la banda \gls{fcc}. La Tabla \ref{tab:requisitos_impedancia_entrada} desglosa los umbrales por banda: en el rango de 3 a 148,5 kHz se corresponden con los valores mínimos de impedancia de equipo de la norma EN 50065-7, y en la banda \gls{fcc} (150--480 kHz), no cubierta por la norma, el requisito del equipo extiende por criterio propio el mismo valor de $50\ \Omega$.
+
+\begin{table}[!h]
+\centering
+\small
+\begin{tabular}{|p{4.3cm}|p{2.5cm}|p{7.0cm}|}
+\hline
+\textbf{Banda de frecuencia} & \textbf{Impedancia mínima} & \textbf{Origen del requisito} \\ \hline
+$3$--$9$ kHz & $>10\ \Omega$ & EN 50065-7 \\ \hline
+$9$--$95$ kHz (CENELEC-A) & $>50\ \Omega$ & EN 50065-7 (valor asociado al modo de recepción) \\ \hline
+$95$--$148{,}5$ kHz & $>5\ \Omega$ & EN 50065-7 \\ \hline
+$150$--$480$ kHz (\gls{fcc}) & $>50\ \Omega$ & Requisito adicional del equipo (banda no cubierta por la norma) \\ \hline
+\end{tabular}
+\caption{Impedancia de entrada mínima exigida en el puerto de red del equipo (fuente y acoplamiento \gls{plc} en conjunto).}
+\label{tab:requisitos_impedancia_entrada}
+\end{table}
+
+Dado que el valor de $50\ \Omega$ es el más restrictivo de los umbrales de la tabla y se exige en las dos bandas en las que opera el módem, es el que condiciona realmente el diseño de la fuente, y es al que se refiere el resto de la subsección. Además, como la impedancia equivalente de dos ramas en paralelo es, en primera aproximación y para ramas de naturaleza similar, inferior a la de la menor de ellas, ni la fuente ni el circuito de acoplamiento pueden por separado presentar una impedancia inferior a $50\ \Omega$ en estas bandas: el margen que la fuente debe dejar es, por tanto, mayor que el del propio requisito de conjunto. Adicionalmente, el equipo debe incluir un punto de desconexión interno entre la fuente y el acoplamiento ($L1/N$ de la fuente), que permite aislar ambos bloques y caracterizar o ensayar cada uno por separado.
+
+\subsubsection*{Motivación: efecto de carga sobre la señal PLC}
+
+La razón física del requisito es el \textbf{efecto de derivación} (\textit{shunting}) que una carga de baja impedancia ejerce sobre cualquier señal \gls{plc} presente en la línea. Si se modela, de forma simplificada, el transmisor como una fuente de corriente $I_{\text{TX}}$ conectada en paralelo con la impedancia de la fuente de alimentación $Z_{\text{PSU}}$ y con la impedancia de la red $Z_{\text{red}}$, la fracción de la corriente que realmente llega a la red es
+\begin{equation}
+    \frac{I_{\text{red}}}{I_{\text{TX}}} = \frac{Z_{\text{PSU}}}{Z_{\text{PSU}} + Z_{\text{red}}},
+    \label{eq:divisor_impedancia_psu}
+\end{equation}
+y, de forma recíproca, la misma proporción de la señal presente en la red es la que alcanza la entrada del receptor, cuya impedancia es muy superior a la de la fuente. La atenuación es, por tanto, la misma en transmisión y en recepción, y se acumula en cada extremo del enlace.
+
+La magnitud del efecto depende de $Z_{\text{red}}$, que en las redes de distribución de baja tensión es muy reducida. De acuerdo con \cite{6525864}, la impedancia de la red de baja tensión es inferior a $10\ \Omega$ para frecuencias de hasta 100 kHz, pudiendo bajar de $1\ \Omega$ hacia las frecuencias más bajas, y cambia además con el tiempo, la frecuencia y la localización, con variaciones bruscas asociadas a las conmutaciones de las cargas conectadas. La Tabla \ref{tab:efecto_carga_impedancia} cuantifica la ecuación (\ref{eq:divisor_impedancia_psu}) tomando $Z_{\text{red}}=10\ \Omega$, el límite superior de dicho rango.
+
+\begin{table}[!h]
+\centering
+\small
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{$Z_{\text{PSU}}$} & \textbf{$I_{\text{red}}/I_{\text{TX}}$} & \textbf{Atenuación} \\ \hline
+$1\ \Omega$ & $9{,}1\ \%$ & $-20{,}8\ \text{dB}$ \\ \hline
+$5\ \Omega$ & $33{,}3\ \%$ & $-9{,}5\ \text{dB}$ \\ \hline
+$10\ \Omega$ & $50{,}0\ \%$ & $-6{,}0\ \text{dB}$ \\ \hline
+$50\ \Omega$ & $83{,}3\ \%$ & $-1{,}6\ \text{dB}$ \\ \hline
+$100\ \Omega$ & $90{,}9\ \%$ & $-0{,}8\ \text{dB}$ \\ \hline
+\end{tabular}
+\caption{Fracción de la señal \gls{plc} que alcanza la red en función de la impedancia de la fuente, para $Z_{\text{red}}=10\ \Omega$ (cálculo ilustrativo con el modelo simplificado de la ecuación \ref{eq:divisor_impedancia_psu}).}
+\label{tab:efecto_carga_impedancia}
+\end{table}
+
+Con $50\ \Omega$ la pérdida por derivación queda por debajo de $2\ \text{dB}$ incluso en el caso más desfavorable de red considerado, mientras que una fuente con unos pocos ohmios de impedancia en la banda supondría perder más de la mitad de la señal en cada sentido. Este orden de magnitud ilustra por qué es necesario exigir una impedancia de decenas de ohmios, frente a los pocos ohmios de una red de distribución: con ese valor la pérdida por derivación pasa a ser despreciable frente al resto de pérdidas del enlace. Nótese que se trata de un modelo escalar simplificado, sin tener en cuenta la naturaleza reactiva de las impedancias ni las reflexiones en la línea, y que sirve únicamente para justificar el orden de magnitud del requisito.
+
+Este efecto no sólo degrada el enlace del propio equipo, sino también el de los demás equipos \gls{plc} conectados a la misma red. La norma EN 50065-7 se concibió precisamente para este fin: según \cite{6525864}, especifica y restringe los valores mínimos de impedancia de carga de los equipos que transmiten y reciben simultáneamente en distintas bandas sobre la misma línea, de manera que un equipo conectado no derive las señales de los demás. En la misma línea, el estudio de CENELEC TC219/WG11 \cite{11238173} concluye que los mecanismos de interferencia deben analizarse considerando conjuntamente las características de emisión y de impedancia de los equipos, y que un equipo incluso sin emisión intencionada puede afectar a otros únicamente por su impedancia, destacando además las fuertes variaciones de impedancia dentro de un mismo ciclo de red que presentan algunos equipos (en particular, lámparas LED). Esta es la razón de fondo por la que la frecuencia de conmutación fuera de banda no es suficiente por sí sola: una fuente puede no emitir en la banda de comunicaciones y, aun así, atenuar la señal por su comportamiento como carga.
+
+\subsubsection*{Dificultad de cumplimiento en una fuente conmutada}
+
+Una fuente conmutada conectada directamente a la red presenta, por construcción, elementos de baja impedancia en las frecuencias de interés. El caso típico son los condensadores en derivación (condensadores X) del filtro de entrada, necesarios para atenuar las emisiones conducidas de la Tabla \ref{tab:requisitos_emc_emisiones} (en particular, el tramo de $0{,}15$ a $30$ MHz). A modo de ejemplo, un condensador X de $100\ \text{nF}$ presenta una reactancia de $\approx 177\ \Omega$ a 9 kHz, pero sólo $\approx 32\ \Omega$ a 50 kHz, $\approx 17\ \Omega$ a 95 kHz, $\approx 11\ \Omega$ a 148,5 kHz y $\approx 3\ \Omega$ a 480 kHz. Es decir, un filtro de entrada convencional no cumple por sí mismo el requisito de $50\ \Omega$ por encima de unos 32 kHz, y al aumentar la capacidad para mejorar la atenuación de emisiones la situación empeora (un condensador de $470\ \text{nF}$ presenta $\approx 3{,}6\ \Omega$ a 95 kHz). El requisito de emisiones y el de impedancia empujan por tanto en sentidos opuestos sobre el filtro de entrada, y su compatibilización constituye uno de los puntos críticos del diseño.
+
+La solución habitual, y la que propone el propio requisito del equipo a modo de ejemplo, es dotar a la entrada de la fuente de un \textbf{filtro de rechazo \gls{plc}} (\textit{PLC rejection filter}): una impedancia serie (inductiva, resonante o incluso puramente resistiva) en las bandas de comunicación, intercalada entre los terminales de red y los elementos de baja impedancia de la fuente, de forma que desde la red se perciba una impedancia elevada con independencia de lo que haya detrás. Esta impedancia serie debe, a su vez, soportar sin saturar la corriente de entrada de la fuente y las sobretensiones de la Tabla \ref{tab:requisitos_emc_inmunidad}, lo que acota su tamaño en un equipo sin refrigeración activa y de potencia reducida.
+
+\subsubsection*{Solución adoptada: evolución del filtro de entrada}
+
+La solución a este conflicto no se alcanzó de forma directa, sino a lo largo de dos iteraciones del filtro de entrada, esquematizadas en la Figura \ref{fig:evolucion_filtro_entrada}.
+
+\textbf{Primera iteración: filtro LC.} El filtro de partida estaba formado por una inductancia serie de $1\ \text{mH}$ en cada línea y un condensador X entre fase y neutro, precedidos por una resistencia de $22\ \Omega$ por línea, que era el primer elemento desde la red. Estas resistencias limitan los picos de corriente hacia los condensadores en paralelo y hacia los del bus de \gls{dc}, entre otras funciones. Con esta ordenación, el primer elemento que encuentra la señal \gls{plc} es la inductancia, cuya reactancia ($\omega L$) supera los $50\ \Omega$ a partir de unos 8 kHz, y alcanza $\approx 220\ \Omega$ a 35 kHz y $\approx 570\ \Omega$ a 91 kHz, por línea. Es decir, presenta una impedancia holgada incluso en las frecuencias más bajas de la banda de operación del módem. Con esta configuración se obtuvieron muy buenos resultados de sensibilidad de recepción y de transmisión \gls{plc}. Sin embargo, no se cumplían los límites de emisión exigidos, por lo que fue necesario invertir el orden de los elementos del filtro (condensador en el lado de red y la inductancia a continuación) para mejorar la atenuación de las emisiones.
+
+\textbf{Segunda iteración: filtro CL con resistencias serie de $200\ \Omega$.} Con el nuevo orden, el condensador pasa a estar conectado directamente a los terminales de red y no siendo posible intercalar otra inductancia antes de él debido al espacio disponible. Su baja reactancia derivaba entonces gran parte de la señal \gls{plc} y empeoraba la recepción, que es exactamente el mecanismo descrito anteriormente. Con el condensador de $33\ \text{nF}$ empleado, su reactancia es de $\approx 138\ \Omega$ a 35 kHz, $\approx 53\ \Omega$ a 91 kHz y $\approx 10\ \Omega$ a 480 kHz, de modo que por sí solo únicamente superaría los $50\ \Omega$ por debajo de unos 96 kHz y quedaría muy lejos del requisito en la banda \gls{fcc}.
+
+Para resolverlo se aprovechó que el consumo del equipo es reducido y que las resistencias serie originales ya se encontraban en el camino de la señal: su valor se elevó de $22\ \Omega$ a $200\ \Omega$ por línea, manteniendo las inductancias de $1\ \text{mH}$ y los condensadores de $33\ \text{nF}$. Como existe un juego idéntico de inductancia y resistencia en el neutro, entre el camino de ida y el de retorno el puerto de red ve $2 \times 200 = 400\ \Omega$ de carácter resistivo y, por tanto, esencialmente plano en toda la banda de interés. La reactancia del condensador queda detrás de estas resistencias y se suma a ellas; en el caso más desfavorable, cuando puede considerarse un cortocircuito (a frecuencias altas), la impedancia vista se reduce al valor de las resistencias, $\approx 400\ \Omega$, ocho veces el mínimo exigido. Este valor corresponde a la rama de la fuente de alimentación, sin considerar la rama del circuito de acoplamiento en paralelo.
+
+A cambio, estas resistencias disipan una potencia no despreciable, que crece con la corriente de entrada de la fuente, y han tenido que implementarse como resistencias de potencia de $2\ \text{W}$ en tecnología de agujero pasante (\textit{through-hole}, \gls{th}) para soportarla de forma adecuada. La pérdida de rendimiento asociada se asume por el reducido consumo del equipo, y es el precio de obtener una impedancia elevada sin añadir otra inductancia antes del condensador.
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{Imagenes/evolucion_filtro_entrada.pdf}
+    \caption{Evolución del filtro de entrada de la fuente: (a) primera iteración, filtro LC con resistencias serie de $22\ \Omega$; (b) segunda iteración, filtro CL con resistencias serie de $200\ \Omega$.}
+    \label{fig:evolucion_filtro_entrada}
+\end{figure}
+
+% NOTA (para completar con datos propios del diseño): (1) esquemáticos de ambas iteraciones para la Figura \ref{fig:evolucion_filtro_entrada}; (2) motivo por el que no se pudo añadir otra inductancia antes del condensador en la segunda iteración (espacio, coste, otro); (3) medidas de impedancia de entrada en el puerto de red (con la fuente en operación y con el punto de desconexión interno abierto/cerrado) y su figura de impedancia frente a frecuencia en las bandas CENELEC-A y FCC; (4) resultados de sensibilidad PLC con cada iteración (relacionar con la Sección \ref{sec:sensibilidad_plc}); (5) potencia disipada real en las resistencias y caída de tensión que introducen a la tensión de entrada mínima (100 V).
 
 \subsection{Requisitos de Potencia y Arquitectura de Salidas}
 \label{subsec:requisitos_salidas_psu}
