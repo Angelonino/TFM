@@ -1,0 +1,165 @@
+\chapter{Ensayos Complementarios de la Campaña de Precertificación}
+\label{anx:ensayos_complementarios}
+
+En este anexo se recogen los ensayos de la campaña de \glslink{precertificacion}{precertificación} que, por la naturaleza de su resultado, no se han incluido en el Capítulo \ref{ch:precompliance_results}: las emisiones de baja frecuencia en la red de alimentación y los ensayos de inmunidad electromagnética, mecánicos y climáticos, cuyo resultado se reduce en su mayoría a la verificación de un criterio de funcionamiento (``pasa/no pasa''). Todos ellos se realizan sobre el mismo prototipo y con el montaje general descrito en la Sección \ref{subsec:eut_montaje}, y se evalúan según los criterios de funcionamiento definidos en la Sección \ref{subsec:supervision_criterios}. Al final del anexo se incluye el resumen global de resultados de la campaña.
+
+\section{Emisiones de Baja Frecuencia en la Red de Alimentación}
+\label{anx:emisiones_baja_frecuencia}
+
+Además de las perturbaciones radioeléctricas analizadas en la Sección \ref{sec:ensayos_emisiones}, la especificación exige caracterizar las perturbaciones de baja frecuencia que el equipo provoca en la propia red de alimentación: la emisión de corrientes armónicas y las fluctuaciones de tensión. Dado el reducido consumo del \gls{dcu}, estos ensayos tienen un interés limitado para la validación del diseño.
+
+\subsection{Emisión de Corrientes Armónicas (EN 61000-3-2)}
+\label{subsec:emision_armonicos}
+
+\subsubsection*{Descripción del ensayo}
+
+Este ensayo mide el contenido armónico de la corriente absorbida por el equipo de la red, desde el 2º hasta el 40º armónico (hasta 2 kHz), alimentándolo con una fuente de tensión sinusoidal de baja distorsión. Su finalidad es limitar la distorsión de la tensión de red provocada por la acumulación de cargas no lineales, como las etapas rectificadoras de entrada de las fuentes conmutadas. La norma no especifica límites para equipos con una potencia asignada igual o inferior a 75 W (salvo equipos de iluminación), condición que cumple holgadamente el \gls{dcu} con un consumo del orden de 10 W (Sección \ref{subsec:requisitos_salidas_psu}). No obstante, se realiza la medida para caracterizar el equipo, tomando como referencia los límites de la Clase A.
+% NOTA: confirmar con el informe del laboratorio la clase y los límites de referencia realmente aplicados.
+
+\subsubsection*{Resultados}
+
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{Imagenes/armonicos_corriente.png}
+    \caption{Espectro de corrientes armónicas absorbidas por el equipo (armónicos 2 a 40) según EN 61000-3-2.}
+    \label{fig:armonicos_corriente}
+\end{figure}
+
+\begin{table}[!h]
+\centering
+\small
+\begin{tabular}{|p{2.4cm}|p{3.2cm}|p{2.2cm}|p{2.2cm}|p{2.2cm}|}
+\hline
+\textbf{Orden armónico} & \textbf{Límite Clase A (A)} & \textbf{$L1$ (A)} & \textbf{$L2$ (A)} & \textbf{$L3$ (A)} \\ \hline
+3 & $2,30$ & -- & -- & -- \\ \hline
+5 & $1,14$ & -- & -- & -- \\ \hline
+7 & $0,77$ & -- & -- & -- \\ \hline
+9 & $0,40$ & -- & -- & -- \\ \hline
+11 & $0,33$ & -- & -- & -- \\ \hline
+13 & $0,21$ & -- & -- & -- \\ \hline
+\end{tabular}
+\caption{Corrientes armónicas impares principales medidas en cada fase, frente a los límites de referencia de la Clase A de EN 61000-3-2.}
+\label{tab:resultados_armonicos}
+\end{table}
+
+\subsection{Fluctuaciones de Tensión y \textit{Flicker} (EN 61000-3-3)}
+\label{subsec:flicker}
+
+\subsubsection*{Descripción del ensayo}
+
+Este ensayo evalúa las variaciones de tensión que las fluctuaciones de consumo del equipo provocan en la red a través de una impedancia de referencia. Su finalidad es evitar el parpadeo perceptible (\textit{flicker}) en la iluminación de otros usuarios conectados a la misma red. Se evalúan la severidad del \textit{flicker} de corta duración ($P_{st}$, 10 minutos) y de larga duración ($P_{lt}$, 2 horas), así como las variaciones relativas de tensión en régimen estacionario ($d_c$) y máxima ($d_{max}$).
+
+\subsubsection*{Resultados}
+
+\begin{table}[!h]
+\centering
+\small
+\begin{tabular}{|p{5.8cm}|p{2.6cm}|p{2.6cm}|p{2.2cm}|}
+\hline
+\textbf{Parámetro} & \textbf{Límite} & \textbf{Valor medido} & \textbf{Resultado} \\ \hline
+$P_{st}$ (\textit{flicker} de corta duración) & $\leq 1,0$ & -- & -- \\ \hline
+$P_{lt}$ (\textit{flicker} de larga duración) & $\leq 0,65$ & -- & -- \\ \hline
+$d_c$ (variación relativa estacionaria) & $\leq 3,3\%$ & -- & -- \\ \hline
+$d_{max}$ (variación relativa máxima) & $\leq 4\%$ & -- & -- \\ \hline
+$T_{max}$ (tiempo con $d(t) > 3,3\%$) & $\leq 500$ ms & -- & -- \\ \hline
+\end{tabular}
+\caption{Resultados del ensayo de fluctuaciones de tensión y \textit{flicker} según EN 61000-3-3.}
+\label{tab:resultados_flicker}
+\end{table}
+
+\section{Ensayos de Inmunidad Electromagnética}
+\label{sec:ensayos_inmunidad}
+
+Los ensayos de inmunidad verifican que el equipo sigue funcionando correctamente ante perturbaciones electromagnéticas externas. Los niveles de severidad y los criterios exigidos se recogieron en la Tabla \ref{tab:requisitos_emc_inmunidad}, por lo que a continuación únicamente se describe brevemente en qué consiste cada ensayo y qué situación real pretende simular. Durante todos ellos se supervisa el funcionamiento del equipo según lo descrito en la Sección \ref{subsec:supervision_criterios}.
+
+\begin{itemize}
+    \item \textbf{Descargas electrostáticas (EN 61000-4-2):} se aplican descargas por contacto y por aire sobre la envolvente del equipo mediante una pistola de descargas. Simula la descarga de la carga electrostática acumulada por un operario al manipular el equipo durante su instalación o mantenimiento.
+    \item \textbf{Campo electromagnético de \gls{rf} radiado (EN 61000-4-3):} el equipo se expone, en una cámara anecoica y en sus tres ejes, a un campo de \gls{rf} modulado entre 80 MHz y 3 GHz. Simula la proximidad de transmisores de radio, como walkie-talkies de los operarios, teléfonos móviles o estaciones base.
+    \item \textbf{Transitorios rápidos en ráfagas (EN 61000-4-4):} se inyectan ráfagas de impulsos de nanosegundos en la alimentación y en las líneas de señal. Simula los transitorios originados por la apertura de cargas inductivas (relés, contactores) y por los rebotes de sus contactos.
+    \item \textbf{Ondas de choque (EN 61000-4-5):} se aplican impulsos de alta energía ($1,2/50\ \mu\text{s}$) en modo diferencial y en modo común. Simula las sobretensiones inducidas por descargas atmosféricas en las líneas aéreas y por maniobras en la red de distribución. Como se indicó en la Sección \ref{subsec:requisitos_emc_psu}, se aplican niveles superiores a los mínimos normativos ($\pm 6\ \text{kV}$ en alimentación y $\pm 4\ \text{kV}$ en comunicaciones).
+    \item \textbf{Perturbaciones conducidas inducidas por campos de \gls{rf} (EN 61000-4-6):} se inyecta una tensión de \gls{rf} modulada entre 150 kHz y 80 MHz en los cables del equipo. Simula las corrientes de \gls{rf} que los transmisores cercanos inducen en los cables, que actúan como antenas a frecuencias en las que el equipo es demasiado pequeño para captar directamente el campo radiado.
+    \item \textbf{Campo magnético a frecuencia industrial (EN 61000-4-8):} el equipo se somete en sus tres ejes a un campo magnético de 50 Hz, continuo y de corta duración. Simula el campo generado por el transformador \gls{mt}/\gls{bt} y los devanados (o barras) del \gls{ct}, por los que circulan corrientes elevadas, así como las corrientes de falta de corta duración. Es un ensayo especialmente relevante para la metrología, ya que el campo puede acoplarse en los circuitos de medida de corriente.
+    \item \textbf{Campo magnético oscilatorio amortiguado (EN 61000-4-10):} se aplica un campo magnético oscilatorio amortiguado de 0,1 a 1 MHz. Simula los campos generados por la maniobra de seccionadores en subestaciones y \gls{ct}.
+    \item \textbf{Armónicos de tensión de baja frecuencia (EN 61000-4-13):} se superponen armónicos e interarmónicos a la tensión de alimentación. Simula la distorsión de la tensión de red provocada por la creciente presencia de cargas no lineales (fuentes conmutadas, inversores, cargadores de vehículo eléctrico).
+    \item \textbf{Onda oscilatoria amortiguada (EN 61000-4-18):} se aplican ondas oscilatorias amortiguadas en modo común y diferencial. Simula los transitorios oscilatorios que aparecen en los circuitos de baja tensión de subestaciones y \gls{ct} al maniobrar los aparatos de corte de media y alta tensión.
+\end{itemize}
+
+\section{Ensayos Mecánicos}
+\label{sec:ensayos_mecanicos}
+
+Los ensayos mecánicos verifican que el equipo resiste las adversidades del transporte, la manipulación y la instalación, y se evalúan comprobando que el equipo funciona correctamente y no presenta daños visibles tras el ensayo:
+
+\begin{itemize}
+    \item \textbf{Grado de protección IP42 (EN 60529):} verifica que la envolvente impide el acceso a partes peligrosas y la entrada de cuerpos sólidos y agua según el grado IP42 mínimo exigido.
+    % NOTA: el resumen del cliente indica "al menos IP2x" y el documento de homologación indica IP42. Confirmar el grado final exigido.
+    \item \textbf{Vibraciones (\gls{etsi} EN 300 019-2-2):} vibración aleatoria en los tres ejes (de 10 a 200 Hz con densidad espectral de aceleración de $1\ \text{m}^2/\text{s}^3$ y de 200 a 2000 Hz con $0,3\ \text{m}^2/\text{s}^3$), con el equipo montado en carril \gls{din} en su posición final. Simula el transporte del equipo en vehículos de transporte público (clase ambiental 2.3).
+    \item \textbf{Caída libre (\gls{etsi} EN 300 019-2-2):} caída desde 1,5 m del equipo embalado para su envío y del armario completo con todos los equipos instalados. Simula los golpes y caídas accidentales durante la logística y manipulación.
+    \item \textbf{Verificación de marcas:} se frota el marcado del equipo durante 15 s con un paño humedecido en agua y otros 15 s con un paño humedecido en disolvente, debiendo seguir siendo legible. Simula la limpieza y el desgaste de las marcas a lo largo de la vida útil del equipo.
+\end{itemize}
+
+\section{Ensayos Climáticos}
+\label{sec:ensayos_climaticos}
+
+Los ensayos climáticos verifican que el equipo funciona de forma fiable en las condiciones ambientales del interior de un \gls{ct}, que carece de climatización y puede estar expuesto a temperaturas extremas y a condensación. Se realizan con el equipo conectado y en funcionamiento:
+
+\begin{itemize}
+    \item \textbf{Calor húmedo (EN 60068-2-78):} $+40\ ^\circ\text{C}$ y $93\%$ de humedad relativa durante 4 días. Simula ambientes húmedos prolongados que favorecen la corrosión y las corrientes de fuga superficiales en la \gls{pcb}.
+    \item \textbf{Calor seco (EN 60068-2-2):} $+70\ ^\circ\text{C}$ durante 72 horas (más exigente que las 16 horas de la norma). Simula el funcionamiento en \gls{ct} prefabricados o sobre poste expuestos a la radiación solar en verano, y acelera los mecanismos de envejecimiento de componentes como los condensadores.
+    \item \textbf{Frío (EN 60068-2-1):} $-25\ ^\circ\text{C}$ durante 16 horas. Simula el funcionamiento y el arranque en condiciones invernales extremas.
+    \item \textbf{Variación de temperatura (EN 60068-2-14):} 5 ciclos de 3 horas entre $-25\ ^\circ\text{C}$ y $+70\ ^\circ\text{C}$, con transiciones de 2 minutos. Simula los ciclos térmicos (día/noche, estacionales) que generan esfuerzos mecánicos por dilatación en las uniones de soldadura y en los componentes de la \gls{pcb}.
+\end{itemize}
+
+\section{Resumen de Resultados de la Campaña}
+\label{sec:resumen_resultados_precert}
+
+La Tabla \ref{tab:resumen_resultados_precert} recoge el resultado global obtenido en cada uno de los ensayos de la campaña de \glslink{precertificacion}{precertificación}.
+
+\begin{table}[!h]
+\centering
+\small
+\begin{tabular}{|p{6.4cm}|p{3.4cm}|p{1.6cm}|p{2.4cm}|}
+\hline
+\textbf{Ensayo} & \textbf{Norma} & \textbf{Criterio} & \textbf{Resultado} \\ \hline
+\multicolumn{4}{|l|}{\textbf{Perturbaciones radioeléctricas y \gls{plc}}} \\ \hline
+Emisiones conducidas, alimentación \gls{ac} & EN 55032 & Clase B & -- \\ \hline
+Emisiones conducidas, puertos Ethernet & EN 55032 & Clase B & -- \\ \hline
+Emisiones radiadas & EN 55032 & Clase B & -- \\ \hline
+Emisión de corrientes armónicas & EN 61000-3-2 & -- & -- \\ \hline
+Fluctuaciones de tensión y \textit{flicker} & EN 61000-3-3 & -- & -- \\ \hline
+Señalización \gls{plc} & EN 50065-1 & -- & -- \\ \hline
+\multicolumn{4}{|l|}{\textbf{Aislamiento}} \\ \hline
+Resistencia de aislamiento & EN 60255-27 & -- & -- \\ \hline
+Rigidez dieléctrica & EN 60255-27 & -- & -- \\ \hline
+Rigidez dieléctrica alimentación (\gls{ovc} IV) & EN 62368-1 & -- & -- \\ \hline
+\multicolumn{4}{|l|}{\textbf{Inmunidad electromagnética}} \\ \hline
+Descargas electrostáticas & EN 61000-4-2 & A & -- \\ \hline
+Campo de \gls{rf} radiado & EN 61000-4-3 & A & -- \\ \hline
+Transitorios rápidos en ráfagas & EN 61000-4-4 & B & -- \\ \hline
+Ondas de choque & EN 61000-4-5 & B & -- \\ \hline
+\gls{rf} conducida & EN 61000-4-6 & A & -- \\ \hline
+Campo magnético a frecuencia industrial & EN 61000-4-8 & A & -- \\ \hline
+Campo magnético oscilatorio amortiguado & EN 61000-4-10 & A & -- \\ \hline
+Armónicos de baja frecuencia & EN 61000-4-13 & A & -- \\ \hline
+Onda oscilatoria amortiguada & EN 61000-4-18 & A & -- \\ \hline
+\multicolumn{4}{|l|}{\textbf{Eléctricos}} \\ \hline
+Huecos, interrupciones y variaciones de tensión & EN 61000-4-11 & A/B & -- \\ \hline
+Fallo a tierra & EN 62052-11 & B & -- \\ \hline
+Sobrecorriente de corta duración & EN 62053-21 & B & -- \\ \hline
+Tensión de alimentación & -- & A/B & -- \\ \hline
+\multicolumn{4}{|l|}{\textbf{Mecánicos}} \\ \hline
+Grado de protección \gls{ip} & EN 60529 & -- & -- \\ \hline
+Vibraciones & \gls{etsi} EN 300 019-2-2 & B & -- \\ \hline
+Caída libre (embalado y en armario) & \gls{etsi} EN 300 019-2-2 & B & -- \\ \hline
+Verificación de marcas & -- & -- & -- \\ \hline
+\multicolumn{4}{|l|}{\textbf{Climáticos}} \\ \hline
+Calor húmedo & EN 60068-2-78 & A & -- \\ \hline
+Calor seco & EN 60068-2-2 & A & -- \\ \hline
+Frío & EN 60068-2-1 & A & -- \\ \hline
+Variación de temperatura & EN 60068-2-14 & B & -- \\ \hline
+\multicolumn{4}{|l|}{\textbf{Seguridad}} \\ \hline
+Seguridad eléctrica (\gls{ovc} IV) & EN 62368-1 & -- & -- \\ \hline
+\end{tabular}
+\caption{Resumen de los resultados obtenidos en la campaña de precertificación.}
+\label{tab:resumen_resultados_precert}
+\end{table}
+% NOTA: en el resumen del cliente la variación de temperatura aparece con criterio B y en el documento de homologación con criterio A; confirmar. Si alguno de estos ensayos no se realiza en la campaña de precertificación (p. ej. los que solo se harán en la homologación final), indicarlo como "No ensayado" en la columna de resultado.

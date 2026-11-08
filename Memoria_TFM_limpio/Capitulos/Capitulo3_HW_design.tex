@@ -56,7 +56,7 @@ Procesamiento & \gls{cpu} basada en i.MX 9; \gls{ram} de $512\text{ MB}$ (amplia
 Seguridad e interconexión & TPM 2.0 (sustituible por TPM por \textit{software}); detección de apertura de la carcasa; \textit{watchdog} con ciclo de potencia de la \gls{cpu}; interconexión con la \gls{mcu} de metrología y \gls{plc} mediante \gls{spi}, línea de interrupción, \gls{swd} y reset, con \textit{buffers} que eviten la realimentación (\textit{backfeeding}) \\ \hline
 Medida de tensión & $127/220$--$230/440\text{ V}_{\text{AC}}\ \pm20\%$; $45$--$65\text{ Hz}$; $Z_{in}=800\text{ k}\Omega$; $V_{start}=10\text{ V}$; consumo $\le 0.07\text{ VA}$; precisión del $1\%$; \gls{cat} III 600 V \\ \hline
 Medida de corriente & $I_n=5\text{ A}$; rango de $2\text{ mA}$ a $10\text{ A}$ ($I_{start}=2\text{ mA}$); consumo $\le 0.02\text{ VA}$; sobrecorriente de $20\times I_{max}$ ($200\text{ A}$) durante $0.5\text{ s}$ (EN 62053-21); \gls{tc} externos de $400/5$ o $1200/5$ con relación configurable \\ \hline
-Clases de precisión y funciones de medición & Energía activa Clase B (EN 50470-3) y reactiva Clase 2 (EN 62053-23), por fase y total, bidireccional y en cuatro cuadrantes; periodos de integración de 5 a 60 min; magnitudes instantáneas actualizadas cada $\le 1\text{ s}$; al menos 12 canales de perfil de carga (hasta 21); eventos de fallo de fase y pérdida de neutro; exactitud verificada antes y después de los ensayos de aislamiento \\ \hline
+Clases de precisión y funciones de medición & Energía activa Clase B (EN 50470-3) y reactiva Clase 2 (EN 62053-23), por fase y total, bidireccional y en cuatro cuadrantes; periodos de integración de 5 a 60 min; magnitudes instantáneas actualizadas cada $\le 1\text{ s}$; al menos 12 canales de perfil de carga (hasta 21); eventos de fallo de fase y pérdida de neutro; exactitud verificada con el equipo de calibración antes y después de los ensayos, sin certificación metrológica en laboratorio \\ \hline
 
 % \multicolumn{3}{|l|}{\textbf{F. Compatibilidad electromagnética y conformidad}} \\ \hline
 % Directivas aplicables & 2014/35/UE (baja tensión), 2014/30/UE (\gls{emc}) y 2011/65/UE (RoHS) & Marcado CE. \\ \hline
@@ -275,6 +275,8 @@ El motor de metrología del PIC32CXMTC procesa de forma continua muestras síncr
     \item \textbf{Detección de Eventos de Calidad de Suministro:} Supervisión continua de huecos de tensión (\textit{sags}), sobretensiones (\textit{swells}), pérdida de fase individual ($L1, L2, L3$), corte de neutro y registro de desequilibrios mediante estampados de tiempo de alta precisión aportados por el \gls{rtc} interno.
 \end{itemize}
 
+Estas clases de precisión constituyen un requisito del equipo. Sin embargo, al tratarse de un equipo de supervisión y no de un contador de energía destinado a la facturación, no se certifican en un laboratorio acreditado: su cumplimiento se asegura calibrando el equipo con esa precisión (o mejor, si es posible) mediante un equipo de calibración (Sección \ref{subsec:calibracion_vectorial}) y verificando con este mismo equipo la exactitud de la medida antes y después de los ensayos tipo.
+
 \subsection{Aislamiento Galvánico e Interfaz SPI con la MPU Host}
 \label{subsec:aislamiento_metrologia_cpu}
 
@@ -312,6 +314,6 @@ El algoritmo calcula y escribe en los registros no volátiles de la librería de
     \item \textbf{Compensación de Offset de Potencia:} Finalmente, en ausencia de corriente aplicada ($I = 0\text{ A}$), se ejecuta la prueba de insensibilidad al creep (\textit{anti-creeping}), ajustando los registros de offset de potencia activa y reactiva (\texttt{POWER\_OFFSET\_P/Q}) para cancelar el ruido de fondo inducido por conmutaciones térmicas o acoplamiento magnético cercano.
 \end{enumerate}
 
-Una vez completado el flujo, el firmware valida el checksum de los parámetros y bloquea los registros de calibración mediante la palabra clave de control (\texttt{CalStart = 0x8765}), garantizando la trazabilidad métrica durante todo el ciclo de vida operativo de 15 años del equipo.
+Una vez completado el flujo, el firmware valida el checksum de los parámetros y bloquea los registros de calibración mediante la palabra clave de control (\texttt{CalStart = 0x8765}), garantizando la trazabilidad métrica durante todo el ciclo de vida operativo de 15 años del equipo. Finalmente, se comprueba con el propio equipo de calibración que el error de medida de la unidad calibrada se mantiene dentro de los límites de la Clase B en energía activa y de la Clase 2 en energía reactiva, o por debajo de ellos. Esta misma verificación se repite una vez finalizados los ensayos tipo, para confirmar que estos no han degradado la exactitud de la medida.
 
 
